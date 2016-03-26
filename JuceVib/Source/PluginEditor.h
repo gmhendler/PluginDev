@@ -33,6 +33,11 @@ private:
     // access the processor object that created it.
     JuceVibAudioProcessor& processor;
 
+	Slider vibFreq;
+	Slider vibAmp;
+
+	ToggleButton bypass;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceVibAudioProcessorEditor)
 };
 

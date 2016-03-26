@@ -31,6 +31,7 @@ public:
     void releaseResources() override;
 
     void processBlock (AudioSampleBuffer&, MidiBuffer&) override;
+	void processBlockBypassed (AudioSampleBuffer&, MidiBuffer&) override;
 
     //==============================================================================
     AudioProcessorEditor* createEditor() override;

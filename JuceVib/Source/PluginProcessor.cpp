@@ -25,33 +25,33 @@ JuceVibAudioProcessor::~JuceVibAudioProcessor()
 	CMyProject::destroy(Vib);
 }
 
-//==============================================================================
-const String JuceVibAudioProcessor::getName() const
-{
-    return JucePlugin_Name;
-}
-
 bool JuceVibAudioProcessor::acceptsMidi() const
 {
-   #if JucePlugin_WantsMidiInput
-    return true;
-   #else
-    return false;
-   #endif
+#if JucePlugin_WantsMidiInput
+	return true;
+#else
+	return false;
+#endif
 }
 
 bool JuceVibAudioProcessor::producesMidi() const
 {
-   #if JucePlugin_ProducesMidiOutput
-    return true;
-   #else
-    return false;
-   #endif
+#if JucePlugin_ProducesMidiOutput
+	return true;
+#else
+	return false;
+#endif
 }
 
 double JuceVibAudioProcessor::getTailLengthSeconds() const
 {
-    return 0.0;
+	return 0.0;
+}
+
+//==============================================================================
+const String JuceVibAudioProcessor::getName() const
+{
+    return JucePlugin_Name;
 }
 
 int JuceVibAudioProcessor::getNumPrograms()
@@ -113,7 +113,31 @@ void JuceVibAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer&
         float* channelData = buffer.getWritePointer (channel);
 
         // ..do something to the data...
+		
     }
+
+	Vib->process(buffer.getArrayOfReadPointers(), buffer.getArrayOfWritePointers(), buffer.getNumSamples());
+
+}
+
+void JuceVibAudioProcessor::processBlockBypassed (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
+{
+    const int totalNumInputChannels  = getTotalNumInputChannels();
+    const int totalNumOutputChannels = getTotalNumOutputChannels();
+
+    // In case we have more outputs than inputs, this code clears any output
+    // channels that didn't contain input data, (because these aren't
+    // guaranteed to be empty - they may contain garbage).
+    // This is here to avoid people getting screaming feedback
+    // when they first compile a plugin, but obviously you don't need to keep
+    // this code if your algorithm always overwrites all the output channels.
+    for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+        buffer.clear (i, 0, buffer.getNumSamples());
+
+    // This is the place where you'd normally do the guts of your plugin's
+    // audio processing...
+
+
 }
 
 //==============================================================================

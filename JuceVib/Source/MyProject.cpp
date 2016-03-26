@@ -109,7 +109,7 @@ Error_t CMyProject::reset ()
 }
 
 
-Error_t CMyProject::process (float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames)
+Error_t CMyProject::process (const float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames)
 {
     
     for (int n = 0; n < iNumberOfFrames; n++)

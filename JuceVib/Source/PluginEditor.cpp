@@ -20,6 +20,29 @@ JuceVibAudioProcessorEditor::JuceVibAudioProcessorEditor (JuceVibAudioProcessor&
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (400, 300);
+
+
+	// these define the parameters of our slider object
+	vibFreq.setSliderStyle(Slider::LinearBarVertical);
+	vibFreq.setRange(0.0, 1000.0);
+	vibFreq.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
+	vibFreq.setPopupDisplayEnabled(true, this);
+	vibFreq.setTextValueSuffix(" Frequency");
+	vibFreq.setValue(30.0);
+	// this function adds the slider to the editor
+	addAndMakeVisible(&vibFreq);
+
+	vibAmp.setSliderStyle(Slider::LinearBarVertical);
+	vibAmp.setRange(0.0, 1.0);
+	vibAmp.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
+	vibAmp.setPopupDisplayEnabled(true, this);
+	vibAmp.setTextValueSuffix(" Amplitude");
+	vibAmp.setValue(0.5);
+	// this function adds the slider to the editor
+	addAndMakeVisible(&vibFreq);
+
+	bypass.setButtonText("Bypass");
+	addAndMakeVisible(&bypass);
 }
 
 JuceVibAudioProcessorEditor::~JuceVibAudioProcessorEditor()

@@ -43,7 +43,7 @@ public:
     Error_t init (int numChannels,int sampleRate, int maxDelay, float LFOFreq, float LFODepth);
     Error_t reset ();
     
-    virtual Error_t process (float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames);
+    virtual Error_t process (const float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames);
 
 protected:
     CMyProject ();
