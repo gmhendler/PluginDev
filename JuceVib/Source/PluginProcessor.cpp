@@ -16,10 +16,12 @@
 //==============================================================================
 JuceVibAudioProcessor::JuceVibAudioProcessor()
 {
+	CMyProject::create(Vib);
 }
 
 JuceVibAudioProcessor::~JuceVibAudioProcessor()
 {
+	CMyProject::destroy(Vib);
 }
 
 //==============================================================================
@@ -80,6 +82,7 @@ void JuceVibAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+	Vib->init(2, sampleRate, 1024, 20, 1);
 }
 
 void JuceVibAudioProcessor::releaseResources()
