@@ -10,13 +10,14 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-#include "MyProject.h"
 
 
 //==============================================================================
 JuceVibAudioProcessor::JuceVibAudioProcessor()
 {
+	Vib = 0;
 	CMyProject::create(Vib);
+
 }
 
 JuceVibAudioProcessor::~JuceVibAudioProcessor()

@@ -13,6 +13,8 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
+#include "MyProject.h"
+
 
 //==============================================================================
 /**
@@ -53,7 +55,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-	CMyProject *Vib = 0;
+	CMyProject *Vib;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceVibAudioProcessor)
 };
