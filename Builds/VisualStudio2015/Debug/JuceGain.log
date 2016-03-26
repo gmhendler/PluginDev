@@ -1,0 +1,8 @@
+﻿  juce_VST_Wrapper.cpp
+  juce_RTAS_DigiCode1.cpp
+  juce_RTAS_DigiCode2.cpp
+  juce_RTAS_DigiCode3.cpp
+  juce_RTAS_WinUtilities.cpp
+  juce_RTAS_Wrapper.cpp
+     Creating library C:\Users\Gregory\Desktop\Plugin Dev\Builds\VisualStudio2015\Debug\JuceGain.lib and object C:\Users\Gregory\Desktop\Plugin Dev\Builds\VisualStudio2015\Debug\JuceGain.exp
+  JuceGain.vcxproj -> C:\Users\Gregory\Desktop\Plugin Dev\Builds\VisualStudio2015\Debug\JuceGain.dll

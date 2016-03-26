@@ -1,0 +1,17 @@
+﻿  PluginProcessor.cpp
+..\..\Source\PluginProcessor.cpp(64): warning C4100: 'index': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(68): warning C4100: 'index': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(73): warning C4100: 'newName': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(73): warning C4100: 'index': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(78): warning C4100: 'samplesPerBlock': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(78): warning C4100: 'sampleRate': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(117): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+..\..\Source\PluginProcessor.cpp(90): warning C4100: 'midiMessages': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(112): warning C4189: 'channelData': local variable is initialized but not referenced
+..\..\Source\PluginProcessor.cpp(134): warning C4100: 'destData': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(141): warning C4100: 'sizeInBytes': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(141): warning C4100: 'data': unreferenced formal parameter
+     Creating library C:\Users\Gregory\Desktop\Plugin Dev\Builds\VisualStudio2015\Release\JuceGain.lib and object C:\Users\Gregory\Desktop\Plugin Dev\Builds\VisualStudio2015\Release\JuceGain.exp
+  Generating code
+  Finished generating code
+  JuceGain.vcxproj -> C:\Users\Gregory\Desktop\Plugin Dev\Builds\VisualStudio2015\Release\JuceGain.dll

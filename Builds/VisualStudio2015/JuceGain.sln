@@ -1,0 +1,19 @@
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2015
+Project("{D0369B02-E267-F598-44E5-8097F74AEF17}") = "JuceGain", "JuceGain.vcxproj", "{94BBF0A8-37EB-A115-EB4C-D4458F5D3424}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94BBF0A8-37EB-A115-EB4C-D4458F5D3424}.Debug|Win32.ActiveCfg = Debug|Win32
+		{94BBF0A8-37EB-A115-EB4C-D4458F5D3424}.Debug|Win32.Build.0 = Debug|Win32
+		{94BBF0A8-37EB-A115-EB4C-D4458F5D3424}.Release|Win32.ActiveCfg = Release|Win32
+		{94BBF0A8-37EB-A115-EB4C-D4458F5D3424}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
