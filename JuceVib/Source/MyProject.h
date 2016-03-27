@@ -45,6 +45,11 @@ public:
     
     virtual Error_t process (const float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames);
 
+	float getFreq();
+	float getDepth();
+	void setFreq(float f);
+	void setDepth(float d);
+
 protected:
     CMyProject ();
     virtual ~CMyProject ();

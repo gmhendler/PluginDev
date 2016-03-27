@@ -18,7 +18,7 @@
 //==============================================================================
 /**
 */
-class JuceVibAudioProcessorEditor  : public AudioProcessorEditor
+class JuceVibAudioProcessorEditor  : public AudioProcessorEditor, private ToggleButton::Listener
 {
 public:
     JuceVibAudioProcessorEditor (JuceVibAudioProcessor&);
@@ -28,15 +28,26 @@ public:
     void paint (Graphics&) override;
     void resized() override;
 
+	void buttonClicked(Button* b);
+
+	void sliderValueChanged(Slider* s);
+
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     JuceVibAudioProcessor& processor;
 
-	Slider vibFreq;
-	Slider vibAmp;
+	Label freqLabel;
+	Label depthLabel;
+	Label bypassLabel;
 
-	ToggleButton bypass;
+	Slider fSlider, dSlider;
+
+	ToggleButton bypassButton;
+
+	//class ParameterSlider;
+
+	//ScopedPointer<ParameterSlider> freqSlider, depthSlider;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceVibAudioProcessorEditor)
 };

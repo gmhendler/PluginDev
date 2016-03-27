@@ -55,6 +55,16 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+	float lfoFreq;
+	float lfoAmp;
+
+	float maxFreq;
+
+	bool bypassed;
+
+	AudioParameterFloat* freqParam;
+	AudioParameterFloat* depthParam;
+
 private:
 	CMyProject *Vib;
     //==============================================================================

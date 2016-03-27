@@ -83,7 +83,8 @@ void JuceVibAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-	Vib->init(2, sampleRate, 1024, 20, 1);
+	Vib->init(2, sampleRate, (int)(sampleRate/1), 5, .5);
+	maxFreq = 200;
 }
 
 void JuceVibAudioProcessor::releaseResources()
@@ -94,30 +95,32 @@ void JuceVibAudioProcessor::releaseResources()
 
 void JuceVibAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
-    const int totalNumInputChannels  = getTotalNumInputChannels();
-    const int totalNumOutputChannels = getTotalNumOutputChannels();
+	if (bypassed) {
+		processBlockBypassed(buffer, midiMessages);
+	}
+	else {
 
-    // In case we have more outputs than inputs, this code clears any output
-    // channels that didn't contain input data, (because these aren't
-    // guaranteed to be empty - they may contain garbage).
-    // This is here to avoid people getting screaming feedback
-    // when they first compile a plugin, but obviously you don't need to keep
-    // this code if your algorithm always overwrites all the output channels.
-    for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+		const int totalNumInputChannels = getTotalNumInputChannels();
+		const int totalNumOutputChannels = getTotalNumOutputChannels();
 
-    // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        float* channelData = buffer.getWritePointer (channel);
+		//Set parameters
+		lfoFreq = freqParam->get();
+		lfoAmp = depthParam->get();
 
-        // ..do something to the data...
-		
-    }
+		Vib->setFreq(lfoFreq*maxFreq);
+		Vib->setDepth(lfoAmp);
 
-	Vib->process(buffer.getArrayOfReadPointers(), buffer.getArrayOfWritePointers(), buffer.getNumSamples());
+		// In case we have more outputs than inputs, this code clears any output
+		// channels that didn't contain input data, (because these aren't
+		// guaranteed to be empty - they may contain garbage).
+		// This is here to avoid people getting screaming feedback
+		// when they first compile a plugin, but obviously you don't need to keep
+		// this code if your algorithm always overwrites all the output channels.
+		for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
+			buffer.clear(i, 0, buffer.getNumSamples());
 
+		Vib->process(buffer.getArrayOfReadPointers(), buffer.getArrayOfWritePointers(), buffer.getNumSamples());
+	}
 }
 
 void JuceVibAudioProcessor::processBlockBypassed (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
@@ -136,8 +139,6 @@ void JuceVibAudioProcessor::processBlockBypassed (AudioSampleBuffer& buffer, Mid
 
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
-
-
 }
 
 //==============================================================================

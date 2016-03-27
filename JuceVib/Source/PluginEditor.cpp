@@ -15,34 +15,45 @@
 
 //==============================================================================
 JuceVibAudioProcessorEditor::JuceVibAudioProcessorEditor (JuceVibAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+    : AudioProcessorEditor (&p), processor (p),
+	freqLabel(String::empty, "Frequency"),
+	depthLabel(String::empty, "Depth")
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    setSize (400, 200);
 
+	/*
+	// sliders
+	addAndMakeVisible(freqSlider = new ParameterSlider(*p.freqParam));
+	freqSlider->setSliderStyle(Slider::LinearBarVertical);
 
-	// these define the parameters of our slider object
-	vibFreq.setSliderStyle(Slider::LinearBarVertical);
-	vibFreq.setRange(0.0, 1000.0);
-	vibFreq.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
-	vibFreq.setPopupDisplayEnabled(true, this);
-	vibFreq.setTextValueSuffix(" Frequency");
-	vibFreq.setValue(30.0);
-	// this function adds the slider to the editor
-	addAndMakeVisible(&vibFreq);
+	addAndMakeVisible(depthSlider = new ParameterSlider(*p.depthParam));
+	depthSlider->setSliderStyle(Slider::LinearBarVertical);
 
-	vibAmp.setSliderStyle(Slider::LinearBarVertical);
-	vibAmp.setRange(0.0, 1.0);
-	vibAmp.setTextBoxStyle(Slider::NoTextBox, false, 90, 0);
-	vibAmp.setPopupDisplayEnabled(true, this);
-	vibAmp.setTextValueSuffix(" Amplitude");
-	vibAmp.setValue(0.5);
-	// this function adds the slider to the editor
-	addAndMakeVisible(&vibFreq);
+	// add some labels for the sliders..
+	freqLabel.attachToComponent(freqSlider, false);
+	depthLabel.attachToComponent(depthSlider, false);
+	*/
 
-	bypass.setButtonText("Bypass");
-	addAndMakeVisible(&bypass);
+	// sliders 
+	fSlider.setSliderStyle(Slider::LinearBarVertical);
+	fSlider.setRange(0.0, 1000.0);
+	fSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 90, 20);
+	fSlider.setTextValueSuffix(" Hz");
+	fSlider.setValue(20.0);
+	addAndMakeVisible(&fSlider);
+
+	dSlider.setSliderStyle(Slider::LinearBarVertical);
+	dSlider.setRange(0.0, 1.0);
+	dSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 90, 20);
+	dSlider.setValue(0.5);
+	addAndMakeVisible(&dSlider);
+
+	// button
+	addAndMakeVisible(bypassButton);
+
+	bypassButton.addListener(this);
 }
 
 JuceVibAudioProcessorEditor::~JuceVibAudioProcessorEditor()
@@ -56,11 +67,68 @@ void JuceVibAudioProcessorEditor::paint (Graphics& g)
 
     g.setColour (Colours::black);
     g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
+    g.drawFittedText("Vibrato", 0, 0, getWidth(), 30, Justification::centred, 1);
 }
 
 void JuceVibAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+	fSlider.setBounds(40, 30, 20, getHeight() - 60);
+	dSlider.setBounds(80, 30, 20, getHeight() - 60);
+	bypassButton.setBounds(100, 30, 20, 20);
 }
+
+
+void JuceVibAudioProcessorEditor::buttonClicked(Button* b) {
+	processor.bypassed = bypassButton.getToggleState();
+}
+
+void JuceVibAudioProcessorEditor::sliderValueChanged(Slider* s) {
+	if (s == &fSlider) {
+		processor.freqParam->setValueNotifyingHost((float)fSlider.getValue());
+	}
+	else if (s == &dSlider) {
+		processor.depthParam->setValueNotifyingHost((float)dSlider.getValue());
+	}
+}
+
+/*
+class JuceVibAudioProcessorEditor::ParameterSlider : public Slider,
+	private Timer
+{
+public:
+	ParameterSlider(AudioProcessorParameter& p)
+		: Slider(p.getName(256)), param(p)
+	{
+		setRange(0.0, 1.0, 0.0);
+		startTimerHz(30);
+		updateSliderPos();
+	}
+
+	void valueChanged() override
+	{
+		param.setValueNotifyingHost((float)Slider::getValue());
+	}
+
+	void timerCallback() override { updateSliderPos(); }
+
+	void startedDragging() override { param.beginChangeGesture(); }
+	void stoppedDragging() override { param.endChangeGesture(); }
+
+	double getValueFromText(const String& text) override { return param.getValueForText(text); }
+	String getTextFromValue(double value) override { return param.getText((float)value, 1024); }
+
+	void updateSliderPos()
+	{
+		const float newValue = param.getValue();
+
+		if (newValue != (float)Slider::getValue() && !isMouseButtonDown())
+			Slider::setValue(newValue);
+	}
+
+	AudioProcessorParameter& param;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ParameterSlider)
+};
+*/

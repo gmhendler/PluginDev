@@ -132,3 +132,19 @@ Error_t CMyProject::process (const float **ppfInputBuffer, float **ppfOutputBuff
     return kNoError;
     
 }
+
+float CMyProject::getFreq() {
+	return freq;
+}
+
+float CMyProject::getDepth() {
+	return depth;
+}
+
+void CMyProject::setFreq(float f) {
+	freq = f;
+}
+void CMyProject::setDepth(float d) {
+	depth = d;
+}
+
