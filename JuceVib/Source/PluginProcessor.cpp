@@ -83,7 +83,7 @@ void JuceVibAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-	Vib->init(2, sampleRate, (int)(sampleRate/1), 5, .5);
+	Vib->init(2, sampleRate, (int)(sampleRate/2), 5, .5);
 	maxFreq = 200;
 }
 
@@ -119,7 +119,8 @@ void JuceVibAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer&
 		for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
 			buffer.clear(i, 0, buffer.getNumSamples());
 
-		Vib->process(buffer.getArrayOfReadPointers(), buffer.getArrayOfWritePointers(), buffer.getNumSamples());
+		float** ppfWriteBuffer = buffer.getArrayOfWritePointers();
+		Vib->process(ppfWriteBuffer, ppfWriteBuffer, buffer.getNumSamples());
 	}
 }
 
