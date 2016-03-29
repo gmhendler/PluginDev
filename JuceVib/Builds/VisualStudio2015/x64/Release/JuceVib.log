@@ -1,0 +1,47 @@
+﻿  MyProject.cpp
+  PluginProcessor.cpp
+  PluginEditor.cpp
+  juce_AAX_Wrapper.cpp
+  juce_audio_basics.cpp
+  juce_audio_devices.cpp
+  juce_audio_formats.cpp
+  juce_audio_processors.cpp
+  juce_core.cpp
+..\..\Source\MyProject.cpp(24): warning C4100: 'eVersionIdx': unreferenced formal parameter
+..\..\Source\MyProject.cpp(117): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\gregory\desktop\school\plugindev\jucevib\source\RingBuffer.h(140): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data (compiling source file ..\..\Source\MyProject.cpp)
+  c:\users\gregory\desktop\school\plugindev\jucevib\source\RingBuffer.h(134): note: while compiling class template member function 'float CRingBuffer<float>::getFracOffset(float)' (compiling source file ..\..\Source\MyProject.cpp)
+  ..\..\Source\MyProject.cpp(123): note: see reference to function template instantiation 'float CRingBuffer<float>::getFracOffset(float)' being compiled
+  ..\..\Source\MyProject.cpp(82): note: see reference to class template instantiation 'CRingBuffer<float>' being compiled
+c:\users\gregory\desktop\school\plugindev\jucevib\source\RingBuffer.h(140): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data (compiling source file ..\..\Source\MyProject.cpp)
+  juce_cryptography.cpp
+..\..\Source\PluginProcessor.cpp(68): warning C4100: 'index': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(72): warning C4100: 'index': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(77): warning C4100: 'newName': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(77): warning C4100: 'index': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(86): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+..\..\Source\PluginProcessor.cpp(82): warning C4100: 'samplesPerBlock': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(127): warning C4100: 'midiMessages': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(157): warning C4100: 'destData': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(164): warning C4100: 'sizeInBytes': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(164): warning C4100: 'data': unreferenced formal parameter
+..\..\Source\PluginEditor.cpp(83): warning C4100: 'b': unreferenced formal parameter
+  juce_data_structures.cpp
+  juce_events.cpp
+  juce_graphics.cpp
+  juce_gui_basics.cpp
+  juce_gui_extra.cpp
+  juce_opengl.cpp
+  juce_PluginUtilities.cpp
+  juce_video.cpp
+  juce_VST_Wrapper.cpp
+  juce_VST3_Wrapper.cpp
+  juce_RTAS_DigiCode1.cpp
+  juce_RTAS_DigiCode2.cpp
+  juce_RTAS_DigiCode3.cpp
+  juce_RTAS_WinUtilities.cpp
+  juce_RTAS_Wrapper.cpp
+     Creating library C:\Users\Gregory\Desktop\School\PluginDev\JuceVib\Builds\VisualStudio2015\x64\Release\JuceVib.lib and object C:\Users\Gregory\Desktop\School\PluginDev\JuceVib\Builds\VisualStudio2015\x64\Release\JuceVib.exp
+  Generating code
+  Finished generating code
+  JuceVib.vcxproj -> C:\Users\Gregory\Desktop\School\PluginDev\JuceVib\Builds\VisualStudio2015\x64\Release\JuceVib.dll
