@@ -21,7 +21,7 @@ JuceVibAudioProcessorEditor::JuceVibAudioProcessorEditor (JuceVibAudioProcessor&
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 200);
+    setSize (300, 200);
 
 	/*
 	// sliders
@@ -38,21 +38,21 @@ JuceVibAudioProcessorEditor::JuceVibAudioProcessorEditor (JuceVibAudioProcessor&
 
 	// sliders 
 	fSlider.setSliderStyle(Slider::LinearBarVertical);
-	fSlider.setRange(0.0, 1000.0);
-	fSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 90, 20);
+	fSlider.setRange(0.0, p.maxFreq);
 	fSlider.setTextValueSuffix(" Hz");
-	fSlider.setValue(20.0);
+	fSlider.setValue(2);
+	fSlider.addListener(this);
 	addAndMakeVisible(&fSlider);
 
 	dSlider.setSliderStyle(Slider::LinearBarVertical);
-	dSlider.setRange(0.0, 1.0);
-	dSlider.setTextBoxStyle(Slider::TextBoxBelow, false, 90, 20);
-	dSlider.setValue(0.5);
+	dSlider.setRange(0.0, p.maxDelay);
+	dSlider.setValue(0.02);
+	dSlider.addListener(this);
 	addAndMakeVisible(&dSlider);
 
 	// button
+	bypassButton.setToggleState(false,true);
 	addAndMakeVisible(bypassButton);
-
 	bypassButton.addListener(this);
 }
 
@@ -74,9 +74,9 @@ void JuceVibAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-	fSlider.setBounds(40, 30, 20, getHeight() - 60);
-	dSlider.setBounds(80, 30, 20, getHeight() - 60);
-	bypassButton.setBounds(100, 30, 20, 20);
+	fSlider.setBounds(40, 30, 40, getHeight() - 60);
+	dSlider.setBounds(100, 30, 40, getHeight() - 60);
+	bypassButton.setBounds(160, 30, 50, 50);
 }
 
 
@@ -86,10 +86,11 @@ void JuceVibAudioProcessorEditor::buttonClicked(Button* b) {
 
 void JuceVibAudioProcessorEditor::sliderValueChanged(Slider* s) {
 	if (s == &fSlider) {
-		processor.freqParam->setValueNotifyingHost((float)fSlider.getValue());
+		float temp = (float)fSlider.getValue();
+		processor.setFreq((float)fSlider.getValue());
 	}
 	else if (s == &dSlider) {
-		processor.depthParam->setValueNotifyingHost((float)dSlider.getValue());
+		processor.setDepth((float)dSlider.getValue());
 	}
 }
 

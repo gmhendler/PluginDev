@@ -4,7 +4,6 @@
 #include <cassert>
 #include <algorithm>
 #include <cmath>
-#include <iostream>
 
 /*! \brief implement a circular buffer of type T
 */
@@ -99,18 +98,29 @@ public:
     }
 
     /*! return the value at the current read index
-    \param iOffset: read at offset from read index
+    \param fOffset: read at offset from read index
     \return float the value from the read index
     */
-    T get (int iOffset = 0) const
+    T get (float fOffset = 0) const
     {
-        int iRead = m_iReadIdx + iOffset;
-        while (iRead > m_iBuffLength-1)
-            iRead  -= m_iBuffLength;
-        while (iRead < 0)
-            iRead  += m_iBuffLength;
-        
-        return m_ptBuff[iRead];
+        if (fOffset == 0)
+            return m_ptBuff[m_iReadIdx];
+        else
+        {
+            assert (std::abs(fOffset) <= m_iBuffLength);
+
+            // compute fraction for linear interpolation 
+            int     iOffset = static_cast<int>(std::floor(fOffset));
+            float   fFrac   = fOffset - iOffset;
+            int     iRead   = m_iReadIdx + iOffset;
+            while (iRead > m_iBuffLength-1)
+                iRead  -= m_iBuffLength;
+            while (iRead < 0)
+                iRead  += m_iBuffLength;
+
+            return (1-fFrac) * m_ptBuff[(m_iReadIdx+iOffset+m_iBuffLength) % m_iBuffLength] +
+                       fFrac * m_ptBuff[(m_iReadIdx+iOffset+m_iBuffLength+1) % m_iBuffLength];
+        }
     }
 
     /*! return the values starting at the current read index
@@ -128,18 +138,6 @@ public:
         memcpy (ptBuff, &m_ptBuff[m_iReadIdx], sizeof(T)*iNumValues2End);
         if ((iLength - iNumValues2End)>0)
             memcpy (&ptBuff[iNumValues2End], m_ptBuff, sizeof(T)*(iLength - iNumValues2End));
-    }
-    
-    float getFracOffset(float delay)
-    {
-        int w = getWriteIdx();
-        int i = (int)delay;
-        float f = delay - i;
-        
-        setReadIdx(w);
-        float res = get(-delay-1)*(f) + get(-delay)*(1.-f);
-                
-        return res;
     }
     
     /*! set buffer content and indices to 0

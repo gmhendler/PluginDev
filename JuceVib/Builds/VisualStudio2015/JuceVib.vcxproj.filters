@@ -1542,7 +1542,7 @@
     <ClCompile Include="..\..\..\JUCE-master\JUCE-master\modules\juce_audio_plugin_client\VST3\juce_VST3_Wrapper.cpp">
       <Filter>Juce Library Code</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\MyProject.cpp">
+    <ClCompile Include="..\..\Source\Vibrato.cpp">
       <Filter>JuceVib\Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -2999,10 +2999,22 @@
     <ClInclude Include="..\..\Source\ErrorDef.h">
       <Filter>JuceVib\Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\MyProject.h">
+    <ClInclude Include="..\..\Source\RingBuffer.h">
       <Filter>JuceVib\Source</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Source\RingBuffer.h">
+    <ClInclude Include="..\..\Source\Lfo.h">
+      <Filter>JuceVib\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Vibrato.h">
+      <Filter>JuceVib\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Util.h">
+      <Filter>JuceVib\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Vector.h">
+      <Filter>JuceVib\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Synthesis.h">
       <Filter>JuceVib\Source</Filter>
     </ClInclude>
   </ItemGroup>

@@ -13,7 +13,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
-#include "MyProject.h"
+#include "Vibrato.h"
 
 
 //==============================================================================
@@ -55,6 +55,10 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+	void setFreq(float f);
+
+	void setDepth(float d);
+
 	float lfoFreq;
 	float lfoAmp;
 
@@ -62,11 +66,13 @@ public:
 
 	bool bypassed;
 
+	float maxDelay;
+
 	AudioParameterFloat* freqParam;
 	AudioParameterFloat* depthParam;
 
 private:
-	CMyProject *Vib;
+	CVibrato *Vibe;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceVibAudioProcessor)
 };

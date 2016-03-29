@@ -12,17 +12,26 @@
 #include "PluginEditor.h"
 
 
+
 //==============================================================================
 JuceVibAudioProcessor::JuceVibAudioProcessor()
 {
-	Vib = 0;
-	CMyProject::create(Vib);
+	maxDelay = 0.05;
+	maxFreq = 10.0;
 
+	bypassed = false;
+
+	Vibe = 0;
+	CVibrato::createInstance(Vibe);
+	freqParam = new AudioParameterFloat("freq", "freq", 0.0, maxFreq, 2.0);
+	addParameter(freqParam);
+	depthParam = new AudioParameterFloat("depth", "depth", 0.0, maxDelay, .02);
+	addParameter(depthParam);
 }
 
 JuceVibAudioProcessor::~JuceVibAudioProcessor()
 {
-	CMyProject::destroy(Vib);
+	CVibrato::destroyInstance(Vibe);
 }
 
 bool JuceVibAudioProcessor::acceptsMidi() const
@@ -83,8 +92,9 @@ void JuceVibAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
-	Vib->init(2, sampleRate, (int)(sampleRate/2), 5, .5);
-	maxFreq = 200;
+	Vibe->initInstance(maxDelay, sampleRate, 2);
+	Vibe->setParam(CVibrato::kParamModWidthInS, .05);
+	Vibe->setParam(CVibrato::kParamModFreqInHz, 5);
 }
 
 void JuceVibAudioProcessor::releaseResources()
@@ -104,11 +114,11 @@ void JuceVibAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer&
 		const int totalNumOutputChannels = getTotalNumOutputChannels();
 
 		//Set parameters
-		lfoFreq = freqParam->get();
-		lfoAmp = depthParam->get();
+	//	lfoFreq = freqParam->get();
+		//lfoAmp = depthParam->get();
 
-		Vib->setFreq(lfoFreq*maxFreq);
-		Vib->setDepth(lfoAmp);
+		Vibe->setParam(CVibrato::kParamModWidthInS, lfoAmp);
+		Vibe->setParam(CVibrato::kParamModFreqInHz, lfoFreq);
 
 		// In case we have more outputs than inputs, this code clears any output
 		// channels that didn't contain input data, (because these aren't
@@ -120,7 +130,8 @@ void JuceVibAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer&
 			buffer.clear(i, 0, buffer.getNumSamples());
 
 		float** ppfWriteBuffer = buffer.getArrayOfWritePointers();
-		Vib->process(ppfWriteBuffer, ppfWriteBuffer, buffer.getNumSamples());
+
+		Vibe->process(ppfWriteBuffer, ppfWriteBuffer, buffer.getNumSamples());
 	}
 }
 
@@ -172,4 +183,12 @@ void JuceVibAudioProcessor::setStateInformation (const void* data, int sizeInByt
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new JuceVibAudioProcessor();
+}
+
+void JuceVibAudioProcessor::setFreq(float f) {
+	lfoFreq = f;
+}
+
+void JuceVibAudioProcessor::setDepth(float d) {
+	lfoAmp = d;
 }

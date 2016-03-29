@@ -18,7 +18,7 @@
 //==============================================================================
 /**
 */
-class JuceVibAudioProcessorEditor  : public AudioProcessorEditor, private ToggleButton::Listener
+class JuceVibAudioProcessorEditor  : public AudioProcessorEditor, private ToggleButton::Listener, private Slider::Listener
 {
 public:
     JuceVibAudioProcessorEditor (JuceVibAudioProcessor&);
