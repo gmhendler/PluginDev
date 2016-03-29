@@ -23,10 +23,6 @@ JuceVibAudioProcessor::JuceVibAudioProcessor()
 
 	Vibe = 0;
 	CVibrato::createInstance(Vibe);
-	freqParam = new AudioParameterFloat("freq", "freq", 0.0, maxFreq, 2.0);
-	addParameter(freqParam);
-	depthParam = new AudioParameterFloat("depth", "depth", 0.0, maxDelay, .02);
-	addParameter(depthParam);
 }
 
 JuceVibAudioProcessor::~JuceVibAudioProcessor()
@@ -93,8 +89,8 @@ void JuceVibAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 	Vibe->initInstance(maxDelay, sampleRate, 2);
-	Vibe->setParam(CVibrato::kParamModWidthInS, .05);
-	Vibe->setParam(CVibrato::kParamModFreqInHz, 5);
+	lfoAmp = .05;
+	lfoFreq = 5;
 }
 
 void JuceVibAudioProcessor::releaseResources()
@@ -114,9 +110,6 @@ void JuceVibAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer&
 		const int totalNumOutputChannels = getTotalNumOutputChannels();
 
 		//Set parameters
-	//	lfoFreq = freqParam->get();
-		//lfoAmp = depthParam->get();
-
 		Vibe->setParam(CVibrato::kParamModWidthInS, lfoAmp);
 		Vibe->setParam(CVibrato::kParamModFreqInHz, lfoFreq);
 

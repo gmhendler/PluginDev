@@ -1,15 +1,16 @@
 ﻿  PluginProcessor.cpp
-..\..\Source\PluginProcessor.cpp(67): warning C4100: 'index': unreferenced formal parameter
-..\..\Source\PluginProcessor.cpp(71): warning C4100: 'index': unreferenced formal parameter
-..\..\Source\PluginProcessor.cpp(76): warning C4100: 'newName': unreferenced formal parameter
-..\..\Source\PluginProcessor.cpp(76): warning C4100: 'index': unreferenced formal parameter
-..\..\Source\PluginProcessor.cpp(85): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-..\..\Source\PluginProcessor.cpp(86): warning C4305: 'argument': truncation from 'double' to 'float'
-..\..\Source\PluginProcessor.cpp(81): warning C4100: 'samplesPerBlock': unreferenced formal parameter
-..\..\Source\PluginProcessor.cpp(128): warning C4100: 'midiMessages': unreferenced formal parameter
-..\..\Source\PluginProcessor.cpp(158): warning C4100: 'destData': unreferenced formal parameter
-..\..\Source\PluginProcessor.cpp(165): warning C4100: 'sizeInBytes': unreferenced formal parameter
-..\..\Source\PluginProcessor.cpp(165): warning C4100: 'data': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(19): warning C4305: '=': truncation from 'double' to 'float'
+..\..\Source\PluginProcessor.cpp(73): warning C4100: 'index': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(77): warning C4100: 'index': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(82): warning C4100: 'newName': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(82): warning C4100: 'index': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(91): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+..\..\Source\PluginProcessor.cpp(92): warning C4305: '=': truncation from 'double' to 'float'
+..\..\Source\PluginProcessor.cpp(87): warning C4100: 'samplesPerBlock': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(131): warning C4100: 'midiMessages': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(161): warning C4100: 'destData': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(168): warning C4100: 'sizeInBytes': unreferenced formal parameter
+..\..\Source\PluginProcessor.cpp(168): warning C4100: 'data': unreferenced formal parameter
      Creating library C:\Users\Gregory\Desktop\School\PluginDev\JuceVib\Builds\VisualStudio2015\Release\JuceVib.lib and object C:\Users\Gregory\Desktop\School\PluginDev\JuceVib\Builds\VisualStudio2015\Release\JuceVib.exp
   Generating code
   Finished generating code

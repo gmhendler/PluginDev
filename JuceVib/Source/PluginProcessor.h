@@ -68,9 +68,6 @@ public:
 
 	float maxDelay;
 
-	AudioParameterFloat* freqParam;
-	AudioParameterFloat* depthParam;
-
 private:
 	CVibrato *Vibe;
     //==============================================================================
