@@ -1545,6 +1545,9 @@
     <ClCompile Include="..\..\Source\Vibrato.cpp">
       <Filter>JuceVib\Source</Filter>
     </ClCompile>
+    <ClCompile Include="PPM.cpp">
+      <Filter>JuceVib\Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\PluginProcessor.h">
@@ -3015,6 +3018,9 @@
       <Filter>JuceVib\Source</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Source\Synthesis.h">
+      <Filter>JuceVib\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="PPM.h">
       <Filter>JuceVib\Source</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1415,6 +1415,7 @@
     <ClCompile Include="..\..\..\JUCE-master\JUCE-master\modules\juce_audio_plugin_client\VST\juce_VST_Wrapper.cpp" />
     <ClCompile Include="..\..\..\JUCE-master\JUCE-master\modules\juce_audio_plugin_client\VST3\juce_VST3_Wrapper.cpp" />
     <ClCompile Include="..\..\Source\Vibrato.cpp" />
+    <ClCompile Include="PPM.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Source\ErrorDef.h" />
@@ -1907,6 +1908,7 @@
     <ClInclude Include="..\..\Source\Util.h" />
     <ClInclude Include="..\..\Source\Vector.h" />
     <ClInclude Include="..\..\Source\Vibrato.h" />
+    <ClInclude Include="PPM.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\JUCE-master\JUCE-master\modules\juce_audio_basics\juce_module_info" />

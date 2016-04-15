@@ -14,6 +14,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
 #include "Vibrato.h"
+#include "PPM.h"
 
 
 //==============================================================================
