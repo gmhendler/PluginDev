@@ -88,5 +88,7 @@ void JuceVibAudioProcessorEditor::sliderValueChanged(Slider* s) {
 
 void JuceVibAudioProcessorEditor::timerCallback() {
 	meter.setValue(processor.getCurMaxPPM());
-	processor.resetCurMaxPPM();
+	if (processor.checked) {
+		processor.resetCurMaxPPM();
+	}
 }

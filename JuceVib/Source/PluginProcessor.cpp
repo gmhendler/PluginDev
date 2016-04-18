@@ -136,6 +136,8 @@ void JuceVibAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer&
 	if (curPPM > curMaxPPM) {
 		curMaxPPM = curPPM;
 	}
+
+	checked = true;
 }
 
 void JuceVibAudioProcessor::processBlockBypassed (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
@@ -202,4 +204,9 @@ float JuceVibAudioProcessor::getCurMaxPPM() {
 
 void JuceVibAudioProcessor::resetCurMaxPPM() {
 	curMaxPPM = 0;
+	checked = false;
+}
+
+bool JuceVibAudioProcessor::isChecked() {
+	return checked;
 }

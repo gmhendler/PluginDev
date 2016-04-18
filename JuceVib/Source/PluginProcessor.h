@@ -60,9 +60,13 @@ public:
 
 	void setDepth(float d);
 
+	float setCurMaxPPM(float val);
+
 	float getCurMaxPPM();
 
 	void resetCurMaxPPM();
+
+	bool isChecked();
 
 	float lfoFreq;
 	float lfoAmp;
@@ -76,6 +80,8 @@ public:
 	float curPPM;
 
 	float curMaxPPM;
+
+	bool checked;
 
 private:
 	CVibrato *Vibe;
