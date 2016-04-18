@@ -13,27 +13,15 @@ public:
 
 	void paint(Graphics&);
 
-	void setPosX(int x);
-
-	void setPosY(int y);
-
-	void setWidth(int w);
-
-	void setHeight(int h);
-
 	void setValue(float v);
 
 	float getPeak();
 
 private:
 
-	int posX;
-	int posY;
-
-	int width;
-	int height;
-
 	float peak;	
+
+	float minPeak;
 
 };
 

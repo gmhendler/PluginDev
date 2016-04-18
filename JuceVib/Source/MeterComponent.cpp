@@ -2,7 +2,7 @@
 #include "MeterComponent.h"
 
 MeterComponent::MeterComponent() {
-
+	minPeak = -12.0;
 }
 
 MeterComponent::~MeterComponent() {
@@ -11,32 +11,18 @@ MeterComponent::~MeterComponent() {
 
 void MeterComponent::paint(Graphics& g)
 {
-	g.setColour(Colours::black);
-	g.fillRect(posX, posY, width, height);
-	if (peak > -12) {
+
+	g.fillAll(Colours::black);
+
+	if (peak > minPeak) {
 		g.setColour(Colours::green);
-		g.fillRect(posX, height - (int)((peak / -12.0)*height), width, (int)((peak/-12.0)*height));
+		g.fillRect(0, (int)((peak / minPeak)*getHeight()), getWidth(), getHeight() - (int)((peak/minPeak)*getHeight()));
 	}
-}
-
-void MeterComponent::setPosX(int x) {
-	posX = x;
-}
-
-void MeterComponent::setPosY(int y) {
-	posY = y;
-}
-
-void MeterComponent::setHeight(int h) {
-	height = h;
-}
-
-void MeterComponent::setWidth(int w) {
-	width = w;
 }
 
 void MeterComponent::setValue(float val) {
 	peak = 20 * log10(val);
+	repaint();
 }
 
 float MeterComponent::getPeak() {

@@ -15,10 +15,10 @@
 
 //==============================================================================
 JuceVibAudioProcessorEditor::JuceVibAudioProcessorEditor (JuceVibAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p),
-	freqLabel(String::empty, "Frequency"),
-	depthLabel(String::empty, "Depth")
+    : AudioProcessorEditor (&p), processor (p)
 {
+
+	startTimer(10);
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (300, 200);
@@ -41,6 +41,10 @@ JuceVibAudioProcessorEditor::JuceVibAudioProcessorEditor (JuceVibAudioProcessor&
 	bypassButton.setToggleState(false,true);
 	addAndMakeVisible(bypassButton);
 	bypassButton.addListener(this);
+
+	//meter
+	meter.setName("ppm");
+	addAndMakeVisible(meter);
 }
 
 JuceVibAudioProcessorEditor::~JuceVibAudioProcessorEditor()
@@ -63,7 +67,8 @@ void JuceVibAudioProcessorEditor::resized()
     // subcomponents in your editor..
 	fSlider.setBounds(40, 30, 40, getHeight() - 60);
 	dSlider.setBounds(100, 30, 40, getHeight() - 60);
-	bypassButton.setBounds(160, 30, 50, 50);
+	bypassButton.setBounds(160, 30, 30, 30);
+	meter.setBounds(220, 30, 40, getHeight() - 60);
 }
 
 
@@ -79,4 +84,9 @@ void JuceVibAudioProcessorEditor::sliderValueChanged(Slider* s) {
 	else if (s == &dSlider) {
 		processor.setDepth((float)dSlider.getValue());
 	}
+}
+
+void JuceVibAudioProcessorEditor::timerCallback() {
+	meter.setValue(processor.getCurMaxPPM());
+	processor.resetCurMaxPPM();
 }

@@ -23,11 +23,13 @@ JuceVibAudioProcessor::JuceVibAudioProcessor()
 
 	Vibe = 0;
 	CVibrato::createInstance(Vibe);
+	CPPM::createInstance(PPM);
 }
 
 JuceVibAudioProcessor::~JuceVibAudioProcessor()
 {
 	CVibrato::destroyInstance(Vibe);
+	CPPM::destroyInstance(PPM);
 }
 
 bool JuceVibAudioProcessor::acceptsMidi() const
@@ -89,8 +91,11 @@ void JuceVibAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 	Vibe->initInstance(maxDelay, sampleRate, 2);
+	PPM->initInstance(sampleRate, 2);
 	lfoAmp = .05;
 	lfoFreq = 5;
+	curPPM = 0;
+	curMaxPPM = 0;
 }
 
 void JuceVibAudioProcessor::releaseResources()
@@ -101,6 +106,8 @@ void JuceVibAudioProcessor::releaseResources()
 
 void JuceVibAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+	float** ppfWriteBuffer = buffer.getArrayOfWritePointers();
+
 	if (bypassed) {
 		processBlockBypassed(buffer, midiMessages);
 	}
@@ -122,9 +129,12 @@ void JuceVibAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer&
 		for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
 			buffer.clear(i, 0, buffer.getNumSamples());
 
-		float** ppfWriteBuffer = buffer.getArrayOfWritePointers();
-
 		Vibe->process(ppfWriteBuffer, ppfWriteBuffer, buffer.getNumSamples());
+	}
+
+	curPPM = PPM->analyze(ppfWriteBuffer, buffer.getNumSamples());
+	if (curPPM > curMaxPPM) {
+		curMaxPPM = curPPM;
 	}
 }
 
@@ -184,4 +194,12 @@ void JuceVibAudioProcessor::setFreq(float f) {
 
 void JuceVibAudioProcessor::setDepth(float d) {
 	lfoAmp = d;
+}
+
+float JuceVibAudioProcessor::getCurMaxPPM() {
+	return curMaxPPM;
+}
+
+void JuceVibAudioProcessor::resetCurMaxPPM() {
+	curMaxPPM = 0;
 }

@@ -13,12 +13,13 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
+#include "MeterComponent.h"
 
 
 //==============================================================================
 /**
 */
-class JuceVibAudioProcessorEditor  : public AudioProcessorEditor, private ToggleButton::Listener, private Slider::Listener
+class JuceVibAudioProcessorEditor  : public AudioProcessorEditor, private ToggleButton::Listener, private Slider::Listener, private Timer
 {
 public:
     JuceVibAudioProcessorEditor (JuceVibAudioProcessor&);
@@ -31,6 +32,8 @@ public:
 	void buttonClicked(Button* b);
 
 	void sliderValueChanged(Slider* s);
+
+	void timerCallback();
 
 private:
     // This reference is provided as a quick way for your editor to
@@ -45,9 +48,7 @@ private:
 
 	ToggleButton bypassButton;
 
-	//class ParameterSlider;
-
-	//ScopedPointer<ParameterSlider> freqSlider, depthSlider;
+	MeterComponent meter;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceVibAudioProcessorEditor)
 };

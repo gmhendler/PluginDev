@@ -4,6 +4,8 @@
 
 #include "Util.h"
 
+#include "Vector.h"
+
 static const char*  kCVibratoBuildDate = __DATE__;
 
 CPPM::CPPM() :
@@ -21,16 +23,24 @@ CPPM::CPPM() :
 CPPM::~CPPM()
 {
 	this->resetInstance();
+	deallocate();
 }
 
 Error_t CPPM::allocate() 
 {
+
+	m_pfTempBuffer = new float[m_iNumChannels];
+	CVectorFloat::setZero(m_pfTempBuffer, m_iNumChannels);
+	
 	return kNoError;
 }
 
 Error_t CPPM::deallocate()
 {
-	
+	if (m_pfTempBuffer) {
+		delete[] m_pfTempBuffer;
+		m_pfTempBuffer = 0;
+	}
 	return kNoError;
 }
 
@@ -84,7 +94,7 @@ Error_t CPPM::destroyInstance(CPPM*& pCPPM)
 	return kNoError;
 }
 
-Error_t CPPM::initInstance(float fMaxModWidthInS, float fSampleRateInHz, int iNumChannels)
+Error_t CPPM::initInstance(float fSampleRateInHz, int iNumChannels)
 {
 
 	m_fAlphaA = 1 - exp(-2.2 / (m_fSampleRate * m_fAttack));
@@ -93,10 +103,10 @@ Error_t CPPM::initInstance(float fMaxModWidthInS, float fSampleRateInHz, int iNu
 	m_fPPMValue = 0;
 	m_fPPMValueTemp = 0;
 
-	for (int c = 0; c < m_iNumChannels; c++)
-	{
-		m_pfTempBuffer[c] = 0;
-	}
+	m_iNumChannels = iNumChannels;
+
+	allocate();
+
 	return kNoError;
 }
 
@@ -106,11 +116,12 @@ Error_t CPPM::resetInstance()
 	{
 		m_pfTempBuffer[c] = 0;
 	}
+	m_pfTempBuffer = 0;
 
 	return kNoError;
 }
 
-Error_t CPPM::analyze(float **ppfInputBuffer, int iNumberOfFrames)
+float CPPM::analyze(float **ppfInputBuffer, int iNumberOfFrames)
 {
 	if (!ppfInputBuffer || iNumberOfFrames < 0)
 		return kFunctionInvalidArgsError;
@@ -134,7 +145,7 @@ Error_t CPPM::analyze(float **ppfInputBuffer, int iNumberOfFrames)
 		}
 	}
 
-	return kNoError;
+	return m_fPPMValue;
 }
 
 float CPPM::getPPMValue() {

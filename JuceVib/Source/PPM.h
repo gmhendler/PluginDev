@@ -3,11 +3,6 @@
 
 #include "ErrorDef.h"
 
-//template <class T>
-//class CRingBuffer;
-
-#include "ErrorDef.h"
-
 class CPPM
 {
 public:
@@ -27,13 +22,13 @@ public:
 	static Error_t createInstance(CPPM*& pCVibrato);
 	static Error_t destroyInstance(CPPM*& pCVibrato);
 
-	Error_t initInstance(float fMaxModWidthInS, float fSampleRateInHz, int iNumChannels);
+	Error_t initInstance(float fSampleRateInHz, int iNumChannels);
 	Error_t resetInstance();
 
 	Error_t allocate();
 	Error_t deallocate();
 
-	Error_t analyze(float **ppfInputBuffer, int iNumberOfFrames);
+	float analyze(float **ppfInputBuffer, int iNumberOfFrames);
 
 	float getPPMValue();
 
@@ -51,7 +46,6 @@ private:
 	float m_fAlphaR;
 
 	float *m_pfTempBuffer;
-	float **m_ppfPPMBuffer;
 
 	float m_fPPMValue;
 	float m_fPPMValueTemp;
