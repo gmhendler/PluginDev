@@ -121,6 +121,37 @@ Error_t CPPM::resetInstance()
 	return kNoError;
 }
 
+Error_t CPPM::process(float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames) 
+{
+	if (!ppfInputBuffer || iNumberOfFrames < 0)
+		return kFunctionInvalidArgsError;
+
+	m_fPPMValue = 0;
+
+	for (int i = 0; i < iNumberOfFrames; i++)
+	{
+		for (int c = 0; c < m_iNumChannels; c++)
+		{
+			if (m_pfTempBuffer[c] > ppfInputBuffer[c][i]) {
+				m_fPPMValueTemp = (1 - m_fAlphaR) * m_pfTempBuffer[c];
+			}
+			else {
+				m_fPPMValueTemp = m_fAlphaA * ppfInputBuffer[c][i] + (1 - m_fAlphaA) * m_pfTempBuffer[c];
+			}
+			m_pfTempBuffer[c] = m_fPPMValueTemp;
+			if (ppfOutputBuffer != NULL) {
+				ppfInputBuffer[c][i] = m_fPPMValueTemp;
+			}
+			if (m_fPPMValueTemp > m_fPPMValue) {
+				m_fPPMValue = m_fPPMValueTemp;
+			}
+		}
+	}
+
+	return kNoError;
+}
+
+
 float CPPM::analyze(float **ppfInputBuffer, int iNumberOfFrames)
 {
 	if (!ppfInputBuffer || iNumberOfFrames < 0)
@@ -147,6 +178,7 @@ float CPPM::analyze(float **ppfInputBuffer, int iNumberOfFrames)
 
 	return m_fPPMValue;
 }
+
 
 float CPPM::getPPMValue() {
 	return m_fPPMValue;

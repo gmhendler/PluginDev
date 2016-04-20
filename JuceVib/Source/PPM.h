@@ -30,7 +30,13 @@ public:
 
 	float analyze(float **ppfInputBuffer, int iNumberOfFrames);
 
+	Error_t process(float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames);
+
 	float getPPMValue();
+
+	void resetPPMValue();
+
+	float getAndResetPPMValue();
 
 protected:
 	CPPM();
@@ -52,6 +58,8 @@ private:
 
 	float   m_fSampleRate;
 	int     m_iNumChannels;
+
+	bool polled;
 };
 
 #endif // #if !defined(__PPM_hdr__)

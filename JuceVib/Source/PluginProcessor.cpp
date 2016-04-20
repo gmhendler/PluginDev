@@ -131,8 +131,10 @@ void JuceVibAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer&
 
 		Vibe->process(ppfWriteBuffer, ppfWriteBuffer, buffer.getNumSamples());
 	}
-
+	
 	curPPM = PPM->analyze(ppfWriteBuffer, buffer.getNumSamples());
+	curPPM = PPM->getPPMValue();
+
 	if (curPPM > curMaxPPM) {
 		curMaxPPM = curPPM;
 	}

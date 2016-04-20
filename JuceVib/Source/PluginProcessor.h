@@ -60,6 +60,10 @@ public:
 
 	void setDepth(float d);
 
+	float getPPM();
+
+	void resetPPM();
+
 	float setCurMaxPPM(float val);
 
 	float getCurMaxPPM();
@@ -86,6 +90,9 @@ public:
 private:
 	CVibrato *Vibe;
 	CPPM *PPM;
+
+	float **ppfOutputBuffer;
+
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuceVibAudioProcessor)
 };
