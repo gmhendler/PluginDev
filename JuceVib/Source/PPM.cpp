@@ -183,3 +183,13 @@ float CPPM::analyze(float **ppfInputBuffer, int iNumberOfFrames)
 float CPPM::getPPMValue() {
 	return m_fPPMValue;
 }
+
+void CPPM::setAttack(float a) {
+	m_fAttack = a;
+	m_fAlphaA = 1 - exp(-2.2 / (m_fSampleRate * m_fAttack));
+}
+
+void CPPM::setRelease(float r) {
+	m_fRelease = r;
+	m_fAlphaR = 1 - exp(-2.2 / (m_fSampleRate * m_fRelease));
+}

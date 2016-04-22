@@ -34,6 +34,10 @@ public:
 
 	float getPPMValue();
 
+	void setAttack(float a);
+
+	void setRelease(float r);
+
 	void resetPPMValue();
 
 	float getAndResetPPMValue();
