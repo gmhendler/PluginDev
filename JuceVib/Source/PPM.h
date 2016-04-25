@@ -28,8 +28,6 @@ public:
 	Error_t allocate();
 	Error_t deallocate();
 
-	float analyze(float **ppfInputBuffer, int iNumberOfFrames);
-
 	Error_t process(float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames);
 
 	float getPPMValue();
@@ -38,9 +36,7 @@ public:
 
 	void setRelease(float r);
 
-	void resetPPMValue();
-
-	float getAndResetPPMValue();
+	float getPPMChannelValue(int channel);
 
 protected:
 	CPPM();
@@ -56,6 +52,8 @@ private:
 	float m_fAlphaR;
 
 	float *m_pfTempBuffer;
+	float *m_pfPPMValues;
+
 
 	float m_fPPMValue;
 	float m_fPPMValueTemp;

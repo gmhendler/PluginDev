@@ -60,13 +60,7 @@ public:
 
 	void setDepth(float d);
 
-	float getPPM();
-
-	void resetPPM();
-
-	float setCurMaxPPM(float val);
-
-	float getCurMaxPPM();
+	float getCurMaxPPM(int c);
 
 	void resetCurMaxPPM();
 
@@ -81,9 +75,9 @@ public:
 
 	float maxDelay;
 
-	float curPPM;
+	float *pcurPPM;
 
-	float curMaxPPM;
+	float *pcurMaxPPM;
 
 	bool checked;
 

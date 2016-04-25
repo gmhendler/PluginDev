@@ -31,6 +31,9 @@ Error_t CPPM::allocate()
 
 	m_pfTempBuffer = new float[m_iNumChannels];
 	CVectorFloat::setZero(m_pfTempBuffer, m_iNumChannels);
+
+	m_pfPPMValues = new float[m_iNumChannels];
+	CVectorFloat::setZero(m_pfPPMValues, m_iNumChannels);
 	
 	return kNoError;
 }
@@ -143,42 +146,13 @@ Error_t CPPM::process(float **ppfInputBuffer, float **ppfOutputBuffer, int iNumb
 				ppfInputBuffer[c][i] = m_fPPMValueTemp;
 			}
 			if (m_fPPMValueTemp > m_fPPMValue) {
-				m_fPPMValue = m_fPPMValueTemp;
+				m_pfPPMValues[c] = m_fPPMValueTemp;
 			}
 		}
 	}
 
 	return kNoError;
 }
-
-
-float CPPM::analyze(float **ppfInputBuffer, int iNumberOfFrames)
-{
-	if (!ppfInputBuffer || iNumberOfFrames < 0)
-		return kFunctionInvalidArgsError;
-
-	m_fPPMValue = 0;
-
-	for (int i = 0; i < iNumberOfFrames; i++)
-	{
-		for (int c = 0; c < m_iNumChannels; c++)
-		{
-			if (m_pfTempBuffer[c] > ppfInputBuffer[c][i]) {
-				m_fPPMValueTemp = (1 - m_fAlphaR) * m_pfTempBuffer[c];
-			}
-			else {
-				m_fPPMValueTemp = m_fAlphaA * ppfInputBuffer[c][i] + (1 - m_fAlphaA) * m_pfTempBuffer[c];
-			}
-			m_pfTempBuffer[c] = m_fPPMValueTemp;
-			if (m_fPPMValueTemp > m_fPPMValue) {
-				m_fPPMValue = m_fPPMValueTemp;
-			}
-		}
-	}
-
-	return m_fPPMValue;
-}
-
 
 float CPPM::getPPMValue() {
 	return m_fPPMValue;
@@ -192,4 +166,16 @@ void CPPM::setAttack(float a) {
 void CPPM::setRelease(float r) {
 	m_fRelease = r;
 	m_fAlphaR = 1 - exp(-2.2 / (m_fSampleRate * m_fRelease));
+}
+
+float CPPM::getPPMChannelValue(int c) {
+	if (m_iNumChannels <= 0) {
+		return 0;
+	}
+	if (c < m_iNumChannels) {
+		return m_pfPPMValues[c];
+	}
+	else {
+		return m_pfPPMValues[m_iNumChannels - 1];
+	}
 }

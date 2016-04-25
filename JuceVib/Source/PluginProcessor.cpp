@@ -10,6 +10,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "Vector.h"
 
 
 
@@ -24,12 +25,21 @@ JuceVibAudioProcessor::JuceVibAudioProcessor()
 	Vibe = 0;
 	CVibrato::createInstance(Vibe);
 	CPPM::createInstance(PPM);
+
+	pcurPPM = new float[2];
+	pcurMaxPPM = new float[2];
 }
 
 JuceVibAudioProcessor::~JuceVibAudioProcessor()
 {
 	CVibrato::destroyInstance(Vibe);
 	CPPM::destroyInstance(PPM);
+
+	delete[] pcurMaxPPM;
+	pcurMaxPPM = 0;
+	delete[] pcurPPM;
+	pcurPPM = 0;
+
 }
 
 bool JuceVibAudioProcessor::acceptsMidi() const
@@ -94,8 +104,8 @@ void JuceVibAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
 	PPM->initInstance(sampleRate, 2);
 	lfoAmp = .05;
 	lfoFreq = 5;
-	curPPM = 0;
-	curMaxPPM = 0;
+	CVectorFloat::setZero(pcurPPM, 2);
+	CVectorFloat::setZero(pcurMaxPPM, 2);
 }
 
 void JuceVibAudioProcessor::releaseResources()
@@ -132,11 +142,16 @@ void JuceVibAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer&
 		Vibe->process(ppfWriteBuffer, ppfWriteBuffer, buffer.getNumSamples());
 	}
 	
-	curPPM = PPM->analyze(ppfWriteBuffer, buffer.getNumSamples());
-	curPPM = PPM->getPPMValue();
+	//curPPM = PPM->analyze(ppfWriteBuffer, buffer.getNumSamples());
+	PPM->process(ppfWriteBuffer,NULL, buffer.getNumSamples());
+	pcurPPM[0] = PPM->getPPMChannelValue(0);
+	pcurPPM[1] = PPM->getPPMChannelValue(1);
 
-	if (curPPM > curMaxPPM) {
-		curMaxPPM = curPPM;
+	for (int i = 0; i < 2; i++)
+	{
+		if (pcurPPM[i] > pcurMaxPPM[i]) {
+			pcurMaxPPM[i] = pcurPPM[i];
+		}
 	}
 
 	checked = true;
@@ -200,13 +215,16 @@ void JuceVibAudioProcessor::setDepth(float d) {
 	lfoAmp = d;
 }
 
-float JuceVibAudioProcessor::getCurMaxPPM() {
-	return curMaxPPM;
+float JuceVibAudioProcessor::getCurMaxPPM(int c) {
+	return pcurMaxPPM[c];
 }
 
 void JuceVibAudioProcessor::resetCurMaxPPM() {
-	curMaxPPM = 0;
-	checked = false;
+	for (int i = 0; i < 2; i++)
+	{
+		pcurMaxPPM[i] = 0;
+		checked = false;
+	}
 }
 
 bool JuceVibAudioProcessor::isChecked() {

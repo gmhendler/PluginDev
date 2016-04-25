@@ -42,9 +42,12 @@ JuceVibAudioProcessorEditor::JuceVibAudioProcessorEditor (JuceVibAudioProcessor&
 	addAndMakeVisible(bypassButton);
 	bypassButton.addListener(this);
 
-	//meter
-	meter.setName("ppm");
-	addAndMakeVisible(meter);
+	//meters
+	meterL.setName("ppmL");
+	addAndMakeVisible(meterL);
+
+	meterR.setName("ppmR");
+	addAndMakeVisible(meterR);
 }
 
 JuceVibAudioProcessorEditor::~JuceVibAudioProcessorEditor()
@@ -68,7 +71,8 @@ void JuceVibAudioProcessorEditor::resized()
 	fSlider.setBounds(40, 30, 40, getHeight() - 60);
 	dSlider.setBounds(100, 30, 40, getHeight() - 60);
 	bypassButton.setBounds(160, 30, 30, 30);
-	meter.setBounds(220, 30, 40, getHeight() - 60);
+	meterL.setBounds(220, 30, 20, getHeight() - 60);
+	meterR.setBounds(240, 30, 20, getHeight() - 60);
 }
 
 
@@ -87,7 +91,8 @@ void JuceVibAudioProcessorEditor::sliderValueChanged(Slider* s) {
 }
 
 void JuceVibAudioProcessorEditor::timerCallback() {
-	meter.setValue(processor.getCurMaxPPM());
+	meterL.setValue(processor.getCurMaxPPM(0));
+	meterR.setValue(processor.getCurMaxPPM(1));
 	if (processor.checked) {
 		processor.resetCurMaxPPM();
 	}
