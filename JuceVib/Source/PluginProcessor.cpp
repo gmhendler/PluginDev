@@ -101,7 +101,7 @@ void JuceVibAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBloc
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 	Vibe->initInstance(maxDelay, sampleRate, 2);
-	PPM->initInstance(sampleRate, 2);
+	PPM->initInstance(sampleRate, 2, .01, 1.5);
 	lfoAmp = .05;
 	lfoFreq = 5;
 	CVectorFloat::setZero(pcurPPM, 2);

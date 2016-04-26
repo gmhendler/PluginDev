@@ -17,33 +17,42 @@ CPPM::CPPM() :
 {
 
 	// this never hurts
-	// this->resetInstance ();
+	this->resetInstance ();
+	m_pfPPMValues = 0;
+	m_pfTempBuffer = 0;
 }
 
 CPPM::~CPPM()
 {
-	this->resetInstance();
-	deallocate();
+	//this->resetInstance();
+	
 }
 
-Error_t CPPM::allocate() 
+Error_t CPPM::allocate()
 {
+	if (!m_pfTempBuffer)
+		m_pfTempBuffer = new float[m_iNumChannels];
+	//CVectorFloat::setZero(m_pfTempBuffer, m_iNumChannels);
 
-	m_pfTempBuffer = new float[m_iNumChannels];
-	CVectorFloat::setZero(m_pfTempBuffer, m_iNumChannels);
+	if (!m_pfPPMValues)
+		m_pfPPMValues = new float[m_iNumChannels];
+	//CVectorFloat::setZero(m_pfPPMValues, m_iNumChannels);
 
-	m_pfPPMValues = new float[m_iNumChannels];
-	CVectorFloat::setZero(m_pfPPMValues, m_iNumChannels);
-	
 	return kNoError;
 }
 
 Error_t CPPM::deallocate()
 {
+	if (m_pfPPMValues) {
+		delete[]  m_pfPPMValues;
+		m_pfPPMValues = 0;
+	}
+
 	if (m_pfTempBuffer) {
-		delete[] m_pfTempBuffer;
+		delete [] m_pfTempBuffer;
 		m_pfTempBuffer = 0;
 	}
+
 	return kNoError;
 }
 
@@ -54,13 +63,13 @@ const int  CPPM::getVersion(const Version_t eVersionIdx)
 	switch (eVersionIdx)
 	{
 	case kMajor:
-		//   iVersion    = MUSI8903_VERSION_MAJOR; 
+		//   iVersion    = MUSI8903_VERSION_MAJOR;
 		break;
 	case kMinor:
-		//  iVersion    = MUSI8903_VERSION_MINOR; 
+		//  iVersion    = MUSI8903_VERSION_MINOR;
 		break;
 	case kPatch:
-		//  iVersion    = MUSI8903_VERSION_PATCH; 
+		//  iVersion    = MUSI8903_VERSION_PATCH;
 		break;
 	case kNumVersionInts:
 		iVersion = -1;
@@ -91,20 +100,26 @@ Error_t CPPM::destroyInstance(CPPM*& pCPPM)
 
 	pCPPM->resetInstance();
 
+	pCPPM->deallocate();
+
 	delete pCPPM;
 	pCPPM = 0;
 
 	return kNoError;
 }
 
-Error_t CPPM::initInstance(float fSampleRateInHz, int iNumChannels)
+Error_t CPPM::initInstance(float fSampleRateInHz, int iNumChannels, float attack, float release)
 {
+	m_fAttack = attack;
+	m_fRelease = release;
+
+
+	m_fSampleRate = fSampleRateInHz;
 
 	m_fAlphaA = 1 - exp(-2.2 / (m_fSampleRate * m_fAttack));
 	m_fAlphaR = 1 - exp(-2.2 / (m_fSampleRate * m_fRelease));
 
-	m_fPPMValue = 0;
-	m_fPPMValueTemp = 0;
+	deallocate();
 
 	m_iNumChannels = iNumChannels;
 
@@ -119,17 +134,19 @@ Error_t CPPM::resetInstance()
 	{
 		m_pfTempBuffer[c] = 0;
 	}
-	m_pfTempBuffer = 0;
 
 	return kNoError;
 }
 
-Error_t CPPM::process(float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames) 
+Error_t CPPM::process(float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames)
 {
 	if (!ppfInputBuffer || iNumberOfFrames < 0)
 		return kFunctionInvalidArgsError;
 
-	m_fPPMValue = 0;
+	// m_fPPMValue = 0;
+
+	CVectorFloat::setZero(m_pfPPMValues, m_iNumChannels);
+
 
 	for (int i = 0; i < iNumberOfFrames; i++)
 	{
@@ -143,9 +160,9 @@ Error_t CPPM::process(float **ppfInputBuffer, float **ppfOutputBuffer, int iNumb
 			}
 			m_pfTempBuffer[c] = m_fPPMValueTemp;
 			if (ppfOutputBuffer != NULL) {
-				ppfInputBuffer[c][i] = m_fPPMValueTemp;
+				ppfOutputBuffer[c][i] = m_fPPMValueTemp;
 			}
-			if (m_fPPMValueTemp > m_fPPMValue) {
+			if (m_fPPMValueTemp > m_pfPPMValues[c]) {
 				m_pfPPMValues[c] = m_fPPMValueTemp;
 			}
 		}
@@ -154,9 +171,10 @@ Error_t CPPM::process(float **ppfInputBuffer, float **ppfOutputBuffer, int iNumb
 	return kNoError;
 }
 
-float CPPM::getPPMValue() {
-	return m_fPPMValue;
-}
+/*float CPPM::getPPMValue() {
+return m_fPPMValue;
+}*/
+
 
 void CPPM::setAttack(float a) {
 	m_fAttack = a;
@@ -168,7 +186,7 @@ void CPPM::setRelease(float r) {
 	m_fAlphaR = 1 - exp(-2.2 / (m_fSampleRate * m_fRelease));
 }
 
-float CPPM::getPPMChannelValue(int c) {
+float CPPM::getPPMChannelValue(int c) { //produces maxm ppm on channel
 	if (m_iNumChannels <= 0) {
 		return 0;
 	}

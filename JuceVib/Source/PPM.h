@@ -22,15 +22,14 @@ public:
 	static Error_t createInstance(CPPM*& pCVibrato);
 	static Error_t destroyInstance(CPPM*& pCVibrato);
 
-	Error_t initInstance(float fSampleRateInHz, int iNumChannels);
+	Error_t initInstance(float fSampleRateInHz, int iNumChannels, float attack, float release);
+
 	Error_t resetInstance();
 
 	Error_t allocate();
 	Error_t deallocate();
 
 	Error_t process(float **ppfInputBuffer, float **ppfOutputBuffer, int iNumberOfFrames);
-
-	float getPPMValue();
 
 	void setAttack(float a);
 
@@ -51,8 +50,8 @@ private:
 	float m_fAlphaA;
 	float m_fAlphaR;
 
-	float *m_pfTempBuffer;
-	float *m_pfPPMValues;
+	float * m_pfTempBuffer;
+	float * m_pfPPMValues;
 
 
 	float m_fPPMValue;
