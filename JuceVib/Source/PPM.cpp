@@ -11,32 +11,29 @@ static const char*  kCVibratoBuildDate = __DATE__;
 CPPM::CPPM() :
 	m_bIsInitialized(false),
 	m_fSampleRate(44100),
-	m_iNumChannels(0),
+	m_iNumChannels(1),
 	m_fAttack(.01),
 	m_fRelease(1.5)
 {
-
-	// this never hurts
-	this->resetInstance ();
 	m_pfPPMValues = 0;
 	m_pfTempBuffer = 0;
 }
 
 CPPM::~CPPM()
 {
-	//this->resetInstance();
-	
+	// this->resetInstance();
+
 }
 
 Error_t CPPM::allocate()
 {
 	if (!m_pfTempBuffer)
 		m_pfTempBuffer = new float[m_iNumChannels];
-	//CVectorFloat::setZero(m_pfTempBuffer, m_iNumChannels);
+	CVectorFloat::setZero(m_pfTempBuffer, m_iNumChannels);
 
 	if (!m_pfPPMValues)
 		m_pfPPMValues = new float[m_iNumChannels];
-	//CVectorFloat::setZero(m_pfPPMValues, m_iNumChannels);
+	CVectorFloat::setZero(m_pfPPMValues, m_iNumChannels);
 
 	return kNoError;
 }
@@ -49,7 +46,7 @@ Error_t CPPM::deallocate()
 	}
 
 	if (m_pfTempBuffer) {
-		delete [] m_pfTempBuffer;
+		delete[] m_pfTempBuffer;
 		m_pfTempBuffer = 0;
 	}
 
@@ -130,11 +127,6 @@ Error_t CPPM::initInstance(float fSampleRateInHz, int iNumChannels, float attack
 
 Error_t CPPM::resetInstance()
 {
-	for (int c = 0; c < m_iNumChannels; c++)
-	{
-		m_pfTempBuffer[c] = 0;
-	}
-
 	return kNoError;
 }
 
