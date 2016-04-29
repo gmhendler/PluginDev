@@ -50,6 +50,9 @@ public:
 
 	void timerCallback();
 
+	float zoom;
+	float waveLen;
+
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
@@ -63,7 +66,7 @@ private:
 
 	AudioFormatManager formatManager;
 
-	Slider gain1, gainThru, threshSlider, recoverySlider, HPF, LPF;
+	Slider gain1, gainThru, threshSlider, recoverySlider, HPF, LPF, zoomSlider;
 
 	MeterComponent meterL, meterR;
 

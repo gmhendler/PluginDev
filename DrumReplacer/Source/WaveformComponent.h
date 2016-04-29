@@ -21,9 +21,7 @@ class WaveformComponent  : public Component
 {
 public:
 	WaveformComponent()
-		: nextSample(0), subSample(0), accumulator(0)
 	{
-		setOpaque(true);
 		clear();
 	}
 
@@ -32,86 +30,64 @@ public:
 		clear();
 	}
 
-	void onWaveformUpdate(AudioSampleBuffer buffer, int lastKnownBufferSize) {
-		float** ppfWriteBuffer = buffer.getArrayOfWritePointers();
-		for (int i = 0; i<buffer.getNumSamples(); i++) {
-			pushSample(ppfWriteBuffer[0][i]);
-		}
+	void updateBuffer(AudioSampleBuffer buffer, int numSamples) {
+		buff = buffer;
+		length = numSamples;
+		loaded = true;
 		repaint();
 	}
 
-	bool skipFrames = true;     // makes simple "interlaced" look by skipping sample frames..
+	void setZoom(float z) {
+		zoom = z;
+		repaint();
+	}
+
     
 private:
-    float samples[1024];
-    int nextSample, subSample;
-    float accumulator;
     
+	int length, lengthZoomed;
+
+	float zoom; 
+	AudioSampleBuffer buff;
+
+	bool loaded = false;
     
     void clear()
     {
-        zeromem (samples, sizeof (samples));
-        accumulator = 0;
-        subSample = 0;
+
+		buff.clear();
     }
     
     void paint (Graphics& g) override
     {
-        g.fillAll(Colours::grey.withAlpha(0.3f));
+        g.fillAll(Colours::black);
         
         const float midY = getHeight() * 0.5f;
-        int samplesAgo = (nextSample + numElementsInArray (samples) - 1);
-        
-        RectangleList<float> waveform;
-        waveform.ensureStorageAllocated ((int) numElementsInArray (samples));
-        
-        float sumSamples = 0;
-        
-        for (int x = jmin (getWidth(), (int) numElementsInArray (samples)); --x >= 0;)
-        {
-            sumSamples += samples[x];
-            
-            bool interlacedLook;
-            
-            if (skipFrames){
-                interlacedLook = fmod(x,2)!=0;
-            }
-            else{
-                interlacedLook = false;
-            }
-            
-            if (interlacedLook){
-                const float sampleSize = midY * samples [samplesAgo-- % numElementsInArray (samples)];
-                waveform.addWithoutMerging (Rectangle<float> ((float) x, midY - sampleSize, 1.0f, sampleSize * 2.0f));
-            }
-        }
-        
-        g.setColour (Colours::whitesmoke);
-        g.fillRectList (waveform);
-        g.setFont (15.0f);
-        
-        float avgValue = sumSamples/numElementsInArray(samples);
-        
-        g.drawText (String::formatted("AvgBufVal: %f",avgValue), getLocalBounds(), Justification::bottomLeft, 1);
-    }
-    
-    void pushSample (const float newSample)
-    {
-        accumulator += newSample;
-        
-        if (subSample == 0)
-        {
-            const int inputSamplesPerPixel = 200;
-            
-            samples[nextSample] = accumulator / inputSamplesPerPixel;
-            nextSample = (nextSample + 1) % numElementsInArray (samples);
-            subSample = inputSamplesPerPixel;
-            accumulator = 0;
-        }
-        else
-        {
-            --subSample;
-        }
+
+		float sampWidth = getWidth() / ((float)length * zoom);
+
+		float ** ppfBuffer = buff.getArrayOfWritePointers();
+
+		float amp = 0;
+
+		if (loaded) {
+			g.setColour(Colours::grey);
+			for (int i = 0; i < length; i++) {
+				amp = ppfBuffer[0][i];
+				int xLoc = (int)(sampWidth * i);
+				float h = amp * getHeight() / 2;
+				if (h < 0) {
+					float top = midY + h;
+					g.drawVerticalLine(xLoc, top, midY);
+				}
+				else if (h > 0) {
+					float btm = midY + h;
+					g.drawVerticalLine(xLoc, midY, btm);
+				}
+
+			}
+		}
+
     }
     
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WaveformComponent);

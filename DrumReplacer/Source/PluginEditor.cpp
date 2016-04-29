@@ -74,6 +74,11 @@ DrumReplacerAudioProcessorEditor::DrumReplacerAudioProcessorEditor(DrumReplacerA
 	LPF.addListener(this);
 	addAndMakeVisible(&LPF);
 
+	zoomSlider.setRange(0.0, 1.0);
+	zoomSlider.setValue(1.0);
+	zoomSlider.addListener(this);
+	addAndMakeVisible(&zoomSlider);
+
 	// button
 	filterButton.setToggleState(false, true);
 	addAndMakeVisible(filterButton);
@@ -85,6 +90,8 @@ DrumReplacerAudioProcessorEditor::DrumReplacerAudioProcessorEditor(DrumReplacerA
 
 	meterR.setName("ppmR");
 	addAndMakeVisible(meterR);
+
+
 }
 
 DrumReplacerAudioProcessorEditor::~DrumReplacerAudioProcessorEditor()
@@ -118,6 +125,8 @@ void DrumReplacerAudioProcessorEditor::resized()
 
 	waveform1.setBounds(350, 350, 400, 300);
 
+	zoomSlider.setBounds(350, 700, 400, 50);
+
 	filterButton.setBounds(100, 500, 30, 30);
 }
 
@@ -149,13 +158,17 @@ void DrumReplacerAudioProcessorEditor::sliderValueChanged(Slider* s) {
 	if (s == &LPF) {
 		processor.setLPF((float)LPF.getValue());
 	}
+	if (s == &zoomSlider) {
+		zoom = zoomSlider.getValue();
+		waveform1.setZoom(zoom);
+	}
 }
 
 
 //OPEN FILE
 void DrumReplacerAudioProcessorEditor::openButtonClicked()
 {
-	FileChooser chooser("Select a Wave file to play...",
+	FileChooser chooser("Select a Wave file...",
 		File::nonexistent,
 		"*.wav");
 
@@ -170,7 +183,10 @@ void DrumReplacerAudioProcessorEditor::openButtonClicked()
 			processor.setSamplerSound(1, reader);
 			AudioSampleBuffer * clipBuff = processor.getClipBuffer(1);
 			waveform1.clearWaveformBuffer();
-			waveform1.onWaveformUpdate(*clipBuff, clipBuff->getNumSamples());
+
+			waveLen = zoom * clipBuff->getNumSamples();
+
+			waveform1.updateBuffer(*clipBuff, waveLen);
 		}
 	}
 }
@@ -188,3 +204,4 @@ void DrumReplacerAudioProcessorEditor::timerCallback() {
 	}
 
 }
+
