@@ -19,7 +19,7 @@
 //==============================================================================
 /**
 */
-class DrumReplacerAudioProcessor  : public AudioProcessor
+class DrumReplacerAudioProcessor  : public AudioProcessor, public ChangeBroadcaster
 {
 public:
     //==============================================================================
@@ -64,6 +64,10 @@ public:
 
 	AudioSampleBuffer * getClipBuffer(int clipNum);
 
+	AudioSampleBuffer * getTriggerBuffer();
+
+	void setTriggerBufferLength(int l);
+
 	void setThresh(float t);
 
 	void setRecovery(float r);
@@ -98,6 +102,8 @@ private:
 	AudioSampleBuffer scratchBuffer;
 	AudioSampleBuffer scratchBuffer2;
 
+	AudioSampleBuffer triggerBuffer;
+
 	Dsp::Filter * dspLpf;
 	Dsp::Params lpfParams;
 
@@ -118,11 +124,19 @@ private:
 
 	float iSampleRate;
 
+	int triggerBufferLength;
+
+	int count;
+
+	int trigSamp;
+
 	bool triggered;
 
 	bool checked;
 
 	bool monitorFilters;
+
+	bool clipLoaded;
 
 	void initialiseSynth();
 	

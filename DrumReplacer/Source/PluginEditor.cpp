@@ -21,10 +21,15 @@ DrumReplacerAudioProcessorEditor::DrumReplacerAudioProcessorEditor(DrumReplacerA
 
 	setSize(800, 800);
 
+	processor.addChangeListener(this);
+
 	startTimer(10);
 
 	waveform1.clearWaveformBuffer();
 	addAndMakeVisible(waveform1);
+
+	triggerWave.clearWaveformBuffer();
+	addAndMakeVisible(triggerWave);
 
 	formatManager.registerBasicFormats();
 
@@ -123,11 +128,13 @@ void DrumReplacerAudioProcessorEditor::resized()
 	HPF.setBounds(10, 150, 50, 50);
 	LPF.setBounds(10, 210, 50, 50);
 
-	waveform1.setBounds(350, 350, 400, 300);
+	waveform1.setBounds(10, 350, 300, 300);
 
-	zoomSlider.setBounds(350, 700, 400, 50);
+	triggerWave.setBounds(400, 350, 300, 300);
 
-	filterButton.setBounds(100, 500, 30, 30);
+	zoomSlider.setBounds(10, 700, 300, 50);
+
+	filterButton.setBounds(700, 10, 30, 30);
 }
 
 void DrumReplacerAudioProcessorEditor::buttonClicked(Button * button)
@@ -161,6 +168,7 @@ void DrumReplacerAudioProcessorEditor::sliderValueChanged(Slider* s) {
 	if (s == &zoomSlider) {
 		zoom = zoomSlider.getValue();
 		waveform1.setZoom(zoom);
+		triggerWave.setZoom(zoom);
 	}
 }
 
@@ -184,9 +192,11 @@ void DrumReplacerAudioProcessorEditor::openButtonClicked()
 			AudioSampleBuffer * clipBuff = processor.getClipBuffer(1);
 			waveform1.clearWaveformBuffer();
 
-			waveLen = zoom * clipBuff->getNumSamples();
+			waveLen = clipBuff->getNumSamples();
 
 			waveform1.updateBuffer(*clipBuff, waveLen);
+
+			processor.setTriggerBufferLength(waveLen);
 		}
 	}
 }
@@ -202,6 +212,13 @@ void DrumReplacerAudioProcessorEditor::timerCallback() {
 	if (processor.isChecked()) {
 		processor.resetCurMaxPPM();
 	}
+	
+}
 
+void DrumReplacerAudioProcessorEditor::changeListenerCallback(ChangeBroadcaster *source) {
+	AudioSampleBuffer * waveBuff = processor.getTriggerBuffer();
+	triggerWave.clearWaveformBuffer();
+
+	triggerWave.updateBuffer(*waveBuff, waveLen);
 }
 

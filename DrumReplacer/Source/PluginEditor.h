@@ -24,7 +24,8 @@
 class DrumReplacerAudioProcessorEditor : public AudioProcessorEditor,
 	private Button::Listener,
 	private Slider::Listener,
-	private Timer
+	private Timer,
+	private ChangeListener
 {
 public:
     DrumReplacerAudioProcessorEditor (DrumReplacerAudioProcessor&);
@@ -50,6 +51,8 @@ public:
 
 	void timerCallback();
 
+	void changeListenerCallback(ChangeBroadcaster *source);
+
 	float zoom;
 	float waveLen;
 
@@ -70,7 +73,7 @@ private:
 
 	MeterComponent meterL, meterR;
 
-	WaveformComponent waveform1;
+	WaveformComponent waveform1, triggerWave;
 
 	LookAndFeel_V3 lookAndFeel;
 

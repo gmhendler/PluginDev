@@ -29,6 +29,10 @@ DrumReplacerAudioProcessor::DrumReplacerAudioProcessor()
 
 	dspLpf = new Dsp::SmoothedFilterDesign<Dsp::RBJ::Design::LowPass, 2>(1024);
 	dspHpf = new Dsp::SmoothedFilterDesign<Dsp::RBJ::Design::HighPass, 2>(1024);
+
+	clipLoaded = false;
+	monitorFilters = false;
+	triggered = false;
 }
 
 DrumReplacerAudioProcessor::~DrumReplacerAudioProcessor()
@@ -49,12 +53,8 @@ void DrumReplacerAudioProcessor::initialiseSynth()
 {
 	const int numVoices = 3;
 
-	// Add some voices...
 	for (int i = numVoices; --i >= 0;)
 		synth.addVoice(new SamplerVoice());
-
-	// ..and give the synth a sound to play
-	//synth.addSound(new SamplerSound());
 }
 
 //==============================================================================
@@ -129,6 +129,10 @@ void DrumReplacerAudioProcessor::prepareToPlay(double sampleRate, int samplesPer
 	scratchBuffer.setSize(getNumInputChannels(), samplesPerBlock);
 	scratchBuffer2.setSize(getNumInputChannels(), samplesPerBlock);
 
+	triggerBufferLength = 30.0 * sampleRate;
+
+	triggerBuffer.setSize(getNumInputChannels(), triggerBufferLength);
+
 	lpfParams[0] = sampleRate;
 	lpfParams[1] = lpFreq;
 	lpfParams[2] = 1;
@@ -136,6 +140,8 @@ void DrumReplacerAudioProcessor::prepareToPlay(double sampleRate, int samplesPer
 	hpfParams[0] = sampleRate;
 	hpfParams[1] = hpFreq;
 	hpfParams[2] = 1;
+
+
 }
 
 void DrumReplacerAudioProcessor::releaseResources()
@@ -176,7 +182,6 @@ void DrumReplacerAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuf
 	const int numSamples = buffer.getNumSamples();
 
 	//PPM
-	//NEED TO INPUT FILTER BUFFER
 	PPMDisplay->process(ppfFilterBuffer, NULL, buffer.getNumSamples());
 	PPMTrigger->process(ppfFilterBuffer, ppfTempBuffer, buffer.getNumSamples());
 	pcurPPM[0] = PPMDisplay->getPPMChannelValue(0);
@@ -189,9 +194,12 @@ void DrumReplacerAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuf
 		}
 	}
 
+	checked = true;
+
 	//Onset Detector
 	OnsetTrigger->process(ppfTempBuffer, ppfTempBuffer, tmpBuffer.getNumSamples());
 
+	float ** ppfTrigBuffer = triggerBuffer.getArrayOfWritePointers();
 
 	//Trigger Clip
 	for (int i = 0; i < tmpBuffer.getNumSamples(); i++)
@@ -199,16 +207,16 @@ void DrumReplacerAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuf
 		for (int c = 0; c < totalNumInputChannels; c++)
 		{
 			if (ppfTempBuffer[c][i] == 1){
-				synth.noteOn(0, 1, clip1Gain);
+				midiMessages.addEvent(MidiMessage::noteOn(1, 1, clip1Gain),i);
 				triggered = true;
+				trigSamp = i;
+				count = 0;
 			}
 		}
 	}
 
-	checked = true;
+	
 
-	//play sample
-	synth.renderNextBlock(buffer, midiMessages, 0, numSamples);
 
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
@@ -219,6 +227,29 @@ void DrumReplacerAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuf
     for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
+
+
+	//fill trigger buffe for wavform display
+	if (triggered) {
+		for (int channel = 0; channel < totalNumInputChannels; ++channel)
+		{
+			for (int i = 0; i < numSamples; i++) {
+
+				if (count < triggerBufferLength) {
+					if (i + trigSamp < buffer.getNumSamples()) {
+						ppfTrigBuffer[channel][count] = buffer.getSample(channel, i + trigSamp);
+						count++;
+					}
+				}
+				else if (count >= triggerBufferLength) {
+					triggered = false;
+					sendChangeMessage();
+				}
+			}
+		}
+	}
+	trigSamp = 0;
+
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
 	float samp = 0.0;
@@ -228,15 +259,23 @@ void DrumReplacerAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuf
 
         // ..do something to the data...
 		for (int i = 0; i < numSamples; i++) {
+
 			if (monitorFilters) {
 				samp = filterBuffer.getSample(channel, i);
 			}
 			else {
 				samp = buffer.getSample(channel, i);
 			}
+
+
+
 			buffer.setSample(channel, i, samp * thruGain);
 		}
     }
+
+	//play sample
+	synth.renderNextBlock(buffer, midiMessages, 0, numSamples);
+	midiMessages.clear();
 }
 
 //==============================================================================
@@ -266,6 +305,7 @@ void DrumReplacerAudioProcessor::setStateInformation (const void* data, int size
 
 void DrumReplacerAudioProcessor::setSamplerSound(int clipNum, AudioFormatReader *source)
 {
+	synth.clearSounds();
 	if (clipNum == 1) {
 		int note = 1;
 		BigInteger notes;
@@ -274,10 +314,11 @@ void DrumReplacerAudioProcessor::setSamplerSound(int clipNum, AudioFormatReader 
 		synth.removeSound(1);
 		synth.addSound(clip1);
 	}
+	clipLoaded = true;
 }
 
 void DrumReplacerAudioProcessor::playClip(int clipNum) {
-	synth.noteOn(0, clipNum, clip1Gain);
+	synth.noteOn(1, clipNum, clip1Gain);
 }
 
 void DrumReplacerAudioProcessor::setThruGain(float gain) {
@@ -295,6 +336,15 @@ AudioSampleBuffer *  DrumReplacerAudioProcessor::getClipBuffer(int clipNum) {
 		return clip1->getAudioData();
 	}
 	return nullptr;
+}
+
+AudioSampleBuffer *  DrumReplacerAudioProcessor::getTriggerBuffer() {
+
+	return &triggerBuffer;
+}
+
+void DrumReplacerAudioProcessor::setTriggerBufferLength(int len) {
+	triggerBufferLength = len;
 }
 
 void DrumReplacerAudioProcessor::setThresh(float t) {
