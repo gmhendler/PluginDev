@@ -3143,6 +3143,9 @@
     <ClInclude Include="..\..\Source\DspFilters\Utilities.h">
       <Filter>DrumReplacer\DspFilters</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\WaveformComponent.h">
+      <Filter>DrumReplacer\Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\JUCE-master\JUCE-master\modules\juce_audio_basics\juce_module_info">

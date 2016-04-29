@@ -16,7 +16,7 @@
 //#include "../modules/juce_audio_utils/gui/juce_AudioVisualiserComponent.h"
 //#include "../modules/juce_audio_utils/juce_audio_utils.h"
 #include "MeterComponent.h"
-
+#include "WaveformComponent.h"
 
 //==============================================================================
 /**
@@ -59,11 +59,15 @@ private:
 	TextButton openButton;
 	TextButton playButton;
 
+	ToggleButton filterButton;
+
 	AudioFormatManager formatManager;
 
 	Slider gain1, gainThru, threshSlider, recoverySlider, HPF, LPF;
 
 	MeterComponent meterL, meterR;
+
+	WaveformComponent waveform1;
 
 	LookAndFeel_V3 lookAndFeel;
 

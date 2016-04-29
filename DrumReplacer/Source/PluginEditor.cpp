@@ -19,11 +19,14 @@ DrumReplacerAudioProcessorEditor::DrumReplacerAudioProcessorEditor(DrumReplacerA
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
 
+	setSize(800, 800);
+
 	startTimer(10);
 
+	waveform1.clearWaveformBuffer();
+	addAndMakeVisible(waveform1);
+
 	formatManager.registerBasicFormats();
-	
-	setSize (400, 400);
 
 	setLookAndFeel(&lookAndFeel);
 
@@ -71,6 +74,11 @@ DrumReplacerAudioProcessorEditor::DrumReplacerAudioProcessorEditor(DrumReplacerA
 	LPF.addListener(this);
 	addAndMakeVisible(&LPF);
 
+	// button
+	filterButton.setToggleState(false, true);
+	addAndMakeVisible(filterButton);
+	filterButton.addListener(this);
+
 	//meters
 	meterL.setName("ppmL");
 	addAndMakeVisible(meterL);
@@ -107,12 +115,19 @@ void DrumReplacerAudioProcessorEditor::resized()
 
 	HPF.setBounds(10, 150, 50, 50);
 	LPF.setBounds(10, 210, 50, 50);
+
+	waveform1.setBounds(350, 350, 400, 300);
+
+	filterButton.setBounds(100, 500, 30, 30);
 }
 
 void DrumReplacerAudioProcessorEditor::buttonClicked(Button * button)
 {
 	if (button == &openButton)      openButtonClicked();
 	if (button == &playButton)      playButtonClicked();
+	if (button == &filterButton) {
+		processor.setFilterMon(button->getToggleState());
+	}
 }
 
 void DrumReplacerAudioProcessorEditor::sliderValueChanged(Slider* s) {
@@ -136,6 +151,8 @@ void DrumReplacerAudioProcessorEditor::sliderValueChanged(Slider* s) {
 	}
 }
 
+
+//OPEN FILE
 void DrumReplacerAudioProcessorEditor::openButtonClicked()
 {
 	FileChooser chooser("Select a Wave file to play...",
@@ -151,6 +168,9 @@ void DrumReplacerAudioProcessorEditor::openButtonClicked()
 		{
 			playButton.setEnabled(true);
 			processor.setSamplerSound(1, reader);
+			AudioSampleBuffer * clipBuff = processor.getClipBuffer(1);
+			waveform1.clearWaveformBuffer();
+			waveform1.onWaveformUpdate(*clipBuff, clipBuff->getNumSamples());
 		}
 	}
 }

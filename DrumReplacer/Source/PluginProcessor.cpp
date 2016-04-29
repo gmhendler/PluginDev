@@ -42,6 +42,7 @@ DrumReplacerAudioProcessor::~DrumReplacerAudioProcessor()
 	pcurMaxPPM = 0;
 	delete[] pcurPPM;
 	pcurPPM = 0;
+
 }
 
 void DrumReplacerAudioProcessor::initialiseSynth()
@@ -227,7 +228,12 @@ void DrumReplacerAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuf
 
         // ..do something to the data...
 		for (int i = 0; i < numSamples; i++) {
-			samp = filterBuffer.getSample(channel, i);
+			if (monitorFilters) {
+				samp = filterBuffer.getSample(channel, i);
+			}
+			else {
+				samp = buffer.getSample(channel, i);
+			}
 			buffer.setSample(channel, i, samp * thruGain);
 		}
     }
@@ -265,6 +271,7 @@ void DrumReplacerAudioProcessor::setSamplerSound(int clipNum, AudioFormatReader 
 		BigInteger notes;
 		notes.setRange(note, 1, true);
 		clip1 = new SamplerSound("Clip1", *source, notes, note, 0.0, 0.1, 30.0);
+		synth.removeSound(1);
 		synth.addSound(clip1);
 	}
 }
@@ -287,7 +294,6 @@ AudioSampleBuffer *  DrumReplacerAudioProcessor::getClipBuffer(int clipNum) {
 	if (clipNum == 1) {
 		return clip1->getAudioData();
 	}
-
 	return nullptr;
 }
 
@@ -323,6 +329,10 @@ bool DrumReplacerAudioProcessor::isTriggered() {
 
 void DrumReplacerAudioProcessor::setTriggered(bool trig) {
 	triggered = trig;
+}
+
+void DrumReplacerAudioProcessor::setFilterMon(bool state) {
+	monitorFilters = state;
 }
 
 void DrumReplacerAudioProcessor::setHPF(float freq) {

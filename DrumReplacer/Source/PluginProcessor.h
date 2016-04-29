@@ -82,7 +82,7 @@ public:
 
 	void setLPF(float freq);
 
-
+	void setFilterMon(bool state);
 
 
 private:
@@ -121,6 +121,8 @@ private:
 	bool triggered;
 
 	bool checked;
+
+	bool monitorFilters;
 
 	void initialiseSynth();
 	

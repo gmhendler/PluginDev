@@ -1841,6 +1841,7 @@
     <ClInclude Include="..\..\Source\PPM.h" />
     <ClInclude Include="..\..\Source\Util.h" />
     <ClInclude Include="..\..\Source\Vector.h" />
+    <ClInclude Include="..\..\Source\WaveformComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\JUCE-master\JUCE-master\modules\juce_audio_basics\juce_module_info" />
