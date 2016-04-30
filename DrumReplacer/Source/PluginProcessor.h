@@ -54,7 +54,7 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-	void setSamplerSound(int clipNum, AudioFormatReader *source);
+	void setSamplerSound(AudioFormatReader *source);
 
 	void playClip(int clipNum);
 
@@ -88,6 +88,11 @@ public:
 
 	void setFilterMon(bool state);
 
+	void setPhase(bool p);
+
+	bool getPhase();
+
+	void setOffset(int o);
 
 private:
 	Synthesiser synth;
@@ -130,6 +135,8 @@ private:
 
 	int trigSamp;
 
+	int offset;
+
 	bool triggered;
 
 	bool checked;
@@ -137,6 +144,8 @@ private:
 	bool monitorFilters;
 
 	bool clipLoaded;
+
+	bool invertPhase;
 
 	void initialiseSynth();
 	

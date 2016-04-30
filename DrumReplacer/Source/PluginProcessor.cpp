@@ -33,6 +33,8 @@ DrumReplacerAudioProcessor::DrumReplacerAudioProcessor()
 	clipLoaded = false;
 	monitorFilters = false;
 	triggered = false;
+
+	offset = 0;
 }
 
 DrumReplacerAudioProcessor::~DrumReplacerAudioProcessor()
@@ -267,8 +269,6 @@ void DrumReplacerAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuf
 				samp = buffer.getSample(channel, i);
 			}
 
-
-
 			buffer.setSample(channel, i, samp * thruGain);
 		}
     }
@@ -276,6 +276,7 @@ void DrumReplacerAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuf
 	//play sample
 	synth.renderNextBlock(buffer, midiMessages, 0, numSamples);
 	midiMessages.clear();
+
 }
 
 //==============================================================================
@@ -303,17 +304,19 @@ void DrumReplacerAudioProcessor::setStateInformation (const void* data, int size
     // whose contents will have been created by the getStateInformation() call.
 }
 
-void DrumReplacerAudioProcessor::setSamplerSound(int clipNum, AudioFormatReader *source)
+void DrumReplacerAudioProcessor::setSamplerSound(AudioFormatReader *source)
 {
 	synth.clearSounds();
-	if (clipNum == 1) {
-		int note = 1;
-		BigInteger notes;
-		notes.setRange(note, 1, true);
-		clip1 = new SamplerSound("Clip1", *source, notes, note, 0.0, 0.1, 30.0);
-		synth.removeSound(1);
-		synth.addSound(clip1);
-	}
+
+	int note = 1;
+	BigInteger notes;
+	notes.setRange(note, 1, true);
+	clip1 = new SamplerSound("Clip1", *source, notes, note, 0.0, 0.1, 30.0);
+
+	synth.removeSound(1);
+	synth.addSound(clip1);
+
+
 	clipLoaded = true;
 }
 
@@ -391,6 +394,18 @@ void DrumReplacerAudioProcessor::setHPF(float freq) {
 
 void DrumReplacerAudioProcessor::setLPF(float freq) {
 	lpfParams[1] = freq;
+}
+
+void DrumReplacerAudioProcessor::setPhase(bool p) {
+	invertPhase = p;
+}
+
+bool DrumReplacerAudioProcessor::getPhase() {
+	return invertPhase;
+}
+
+void DrumReplacerAudioProcessor::setOffset(int o) {
+	offset = o;
 }
 
 //==============================================================================

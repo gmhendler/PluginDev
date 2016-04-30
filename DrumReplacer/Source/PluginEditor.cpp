@@ -84,10 +84,21 @@ DrumReplacerAudioProcessorEditor::DrumReplacerAudioProcessorEditor(DrumReplacerA
 	zoomSlider.addListener(this);
 	addAndMakeVisible(&zoomSlider);
 
+	offsetSlider.setRange(-50, 50);
+	offsetSlider.setValue(0);
+	offsetSlider.setDoubleClickReturnValue(true, 0);
+
+	offsetSlider.addListener(this);
+	addAndMakeVisible(&offsetSlider);
+
 	// button
 	filterButton.setToggleState(false, true);
 	addAndMakeVisible(filterButton);
 	filterButton.addListener(this);
+
+	phaseButton.setToggleState(false, true);
+	addAndMakeVisible(phaseButton);
+	phaseButton.addListener(this);
 
 	//meters
 	meterL.setName("ppmL");
@@ -135,6 +146,9 @@ void DrumReplacerAudioProcessorEditor::resized()
 	zoomSlider.setBounds(10, 700, 300, 50);
 
 	filterButton.setBounds(700, 10, 30, 30);
+	phaseButton.setBounds(740, 10, 30, 30);
+
+	offsetSlider.setBounds(400, 100, 300, 50);
 }
 
 void DrumReplacerAudioProcessorEditor::buttonClicked(Button * button)
@@ -143,6 +157,22 @@ void DrumReplacerAudioProcessorEditor::buttonClicked(Button * button)
 	if (button == &playButton)      playButtonClicked();
 	if (button == &filterButton) {
 		processor.setFilterMon(button->getToggleState());
+	}
+	if (button == &phaseButton) {
+		bool ph = button->getToggleState();
+		processor.setPhase(ph);
+
+		AudioSampleBuffer * clipBuff = processor.getClipBuffer(1);
+
+		clipBuff->applyGain(-1.0);
+				
+		waveform1.clearWaveformBuffer();
+
+		waveLen = clipBuff->getNumSamples();
+
+		waveform1.updateBuffer(*clipBuff, waveLen);
+
+		processor.setTriggerBufferLength(waveLen);
 	}
 }
 
@@ -170,6 +200,33 @@ void DrumReplacerAudioProcessorEditor::sliderValueChanged(Slider* s) {
 		waveform1.setZoom(zoom);
 		triggerWave.setZoom(zoom);
 	}
+	if (s == &offsetSlider) {
+		processor.setOffset((int)(offsetSlider.getValue()));
+
+		int offset = (int)(offsetSlider.getValue() * processor.getSampleRate() / 1000);
+
+		AudioSampleBuffer * clipBuff = processor.getClipBuffer(1);
+		float samp = 0.0;
+		clipBuff->applyGain(0);
+		for (int channel = 0; channel < clipBuff->getNumChannels(); ++channel)
+		{
+			for (int i = 0; i < clipBuff->getNumSamples(); i++) {
+
+				samp = clipBufferOrig.getSample(channel, i);
+				if (((i + offset) > 0) && ((i + offset) < clipBuff->getNumSamples())) {
+					clipBuff->setSample(channel, i + offset, samp);
+				}
+			}
+		}
+
+		waveform1.clearWaveformBuffer();
+
+		waveLen = clipBuff->getNumSamples();
+
+		waveform1.updateBuffer(*clipBuff, waveLen);
+
+		processor.setTriggerBufferLength(waveLen);
+	}
 }
 
 
@@ -188,8 +245,10 @@ void DrumReplacerAudioProcessorEditor::openButtonClicked()
 		if (reader != nullptr)
 		{
 			playButton.setEnabled(true);
-			processor.setSamplerSound(1, reader);
+			processor.setSamplerSound(reader);
 			AudioSampleBuffer * clipBuff = processor.getClipBuffer(1);
+			clipBufferOrig.makeCopyOf(*clipBuff);
+
 			waveform1.clearWaveformBuffer();
 
 			waveLen = clipBuff->getNumSamples();
@@ -197,6 +256,9 @@ void DrumReplacerAudioProcessorEditor::openButtonClicked()
 			waveform1.updateBuffer(*clipBuff, waveLen);
 
 			processor.setTriggerBufferLength(waveLen);
+
+			offsetSlider.setValue(0);
+			phaseButton.setToggleState(false, true);
 		}
 	}
 }

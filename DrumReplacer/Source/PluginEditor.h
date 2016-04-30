@@ -65,11 +65,13 @@ private:
 	TextButton openButton;
 	TextButton playButton;
 
-	ToggleButton filterButton;
+	ToggleButton filterButton, phaseButton;
 
 	AudioFormatManager formatManager;
 
-	Slider gain1, gainThru, threshSlider, recoverySlider, HPF, LPF, zoomSlider;
+	AudioSampleBuffer clipBufferOrig;
+
+	Slider gain1, gainThru, threshSlider, recoverySlider, HPF, LPF, zoomSlider, offsetSlider;
 
 	MeterComponent meterL, meterR;
 
