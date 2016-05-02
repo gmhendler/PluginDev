@@ -77,6 +77,10 @@ private:
 
 	WaveformComponent waveform1, triggerWave;
 
+	Label retrigLabel, zoomLabel, gainlabel1, gainlabel2, offsetLabel, filterLabel1, filterLabel2;
+
+	Image bg;
+
 	LookAndFeel_V3 lookAndFeel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (DrumReplacerAudioProcessorEditor)

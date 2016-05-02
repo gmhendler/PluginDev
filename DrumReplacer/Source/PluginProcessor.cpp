@@ -35,6 +35,7 @@ DrumReplacerAudioProcessor::DrumReplacerAudioProcessor()
 	triggered = false;
 
 	offset = 0;
+	count = 0;
 }
 
 DrumReplacerAudioProcessor::~DrumReplacerAudioProcessor()
@@ -48,6 +49,9 @@ DrumReplacerAudioProcessor::~DrumReplacerAudioProcessor()
 	pcurMaxPPM = 0;
 	delete[] pcurPPM;
 	pcurPPM = 0;
+
+	dspLpf->~Filter();
+	dspHpf->~Filter();
 
 }
 
@@ -119,6 +123,8 @@ void DrumReplacerAudioProcessor::prepareToPlay(double sampleRate, int samplesPer
 	// initialisation that you need..
 	synth.setCurrentPlaybackSampleRate(sampleRate);
 
+	maxClipLen = 5.0;
+
 	iSampleRate = sampleRate;
 
 	PPMDisplay->initInstance(sampleRate, 2, .0001, 1.0);
@@ -131,7 +137,7 @@ void DrumReplacerAudioProcessor::prepareToPlay(double sampleRate, int samplesPer
 	scratchBuffer.setSize(getNumInputChannels(), samplesPerBlock);
 	scratchBuffer2.setSize(getNumInputChannels(), samplesPerBlock);
 
-	triggerBufferLength = 30.0 * sampleRate;
+	triggerBufferLength = maxClipLen * sampleRate;
 
 	triggerBuffer.setSize(getNumInputChannels(), triggerBufferLength);
 
@@ -212,7 +218,9 @@ void DrumReplacerAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuf
 				midiMessages.addEvent(MidiMessage::noteOn(1, 1, clip1Gain),i);
 				triggered = true;
 				trigSamp = i;
+				triggerBuffer.clear(count, triggerBufferLength - count);
 				count = 0;
+				sendChangeMessage();
 			}
 		}
 	}
@@ -231,8 +239,9 @@ void DrumReplacerAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuf
 
 
 
-	//fill trigger buffe for wavform display
+	//fill trigger buffer for wavform display
 	if (triggered) {
+		
 		for (int channel = 0; channel < totalNumInputChannels; ++channel)
 		{
 			for (int i = 0; i < numSamples; i++) {
@@ -251,6 +260,10 @@ void DrumReplacerAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuf
 		}
 	}
 	trigSamp = 0;
+
+
+	//play sample
+	synth.renderNextBlock(buffer, midiMessages, 0, numSamples);
 
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
@@ -273,8 +286,6 @@ void DrumReplacerAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuf
 		}
     }
 
-	//play sample
-	synth.renderNextBlock(buffer, midiMessages, 0, numSamples);
 	midiMessages.clear();
 
 }
@@ -311,7 +322,7 @@ void DrumReplacerAudioProcessor::setSamplerSound(AudioFormatReader *source)
 	int note = 1;
 	BigInteger notes;
 	notes.setRange(note, 1, true);
-	clip1 = new SamplerSound("Clip1", *source, notes, note, 0.0, 0.1, 30.0);
+	clip1 = new SamplerSound("Clip1", *source, notes, note, 0.0, 0.1, maxClipLen);
 
 	synth.removeSound(1);
 	synth.addSound(clip1);
@@ -348,6 +359,10 @@ AudioSampleBuffer *  DrumReplacerAudioProcessor::getTriggerBuffer() {
 
 void DrumReplacerAudioProcessor::setTriggerBufferLength(int len) {
 	triggerBufferLength = len;
+}
+
+int DrumReplacerAudioProcessor::getTriggerBufferLength() {
+	return triggerBufferLength;
 }
 
 void DrumReplacerAudioProcessor::setThresh(float t) {

@@ -68,6 +68,8 @@ public:
 
 	void setTriggerBufferLength(int l);
 
+	int getTriggerBufferLength();
+
 	void setThresh(float t);
 
 	void setRecovery(float r);
@@ -117,6 +119,8 @@ private:
 
 	float * pcurPPM;
 	float * pcurMaxPPM;
+
+	float maxClipLen;
 
 	float thresh;
 	float recovery;

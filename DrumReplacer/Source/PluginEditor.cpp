@@ -19,24 +19,28 @@ DrumReplacerAudioProcessorEditor::DrumReplacerAudioProcessorEditor(DrumReplacerA
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
 
-	setSize(800, 800);
+	setSize(610, 400);
 
 	processor.addChangeListener(this);
 
 	startTimer(10);
 
+	formatManager.registerBasicFormats();
+
+	setLookAndFeel(&lookAndFeel);
+
+	waveLen = processor.getTriggerBufferLength();
+
+	//Waveforms
 	waveform1.clearWaveformBuffer();
 	addAndMakeVisible(waveform1);
 
 	triggerWave.clearWaveformBuffer();
 	addAndMakeVisible(triggerWave);
 
-	formatManager.registerBasicFormats();
-
-	setLookAndFeel(&lookAndFeel);
-
+	//Buttons
 	addAndMakeVisible(&openButton);
-	openButton.setButtonText("Open...");
+	openButton.setButtonText("Load Clip");
 	openButton.addListener(this);
 
 	addAndMakeVisible(&playButton);
@@ -45,41 +49,42 @@ DrumReplacerAudioProcessorEditor::DrumReplacerAudioProcessorEditor(DrumReplacerA
 	playButton.setColour(TextButton::buttonColourId, Colours::green);
 	playButton.setEnabled(false);
 
-	gain1.setRange(0.0, 1.0);
+	//Toggle Buttons
+	filterButton.setButtonText("Monitor Sidechain");
+	filterButton.setToggleState(false, true);
+	addAndMakeVisible(filterButton);
+	filterButton.addListener(this);
+
+	phaseButton.setEnabled(false);
+	phaseButton.setButtonText("Invert Phase");
+	phaseButton.setToggleState(false, true);
+	addAndMakeVisible(phaseButton);
+	phaseButton.addListener(this);
+
+	//Sliders
+	gain1.setRange(0.0, 1.0, 0.001);
 	gain1.setValue(0.75);
 	gain1.addListener(this);
+	gain1.setSliderStyle(Slider::LinearVertical);
+	gain1.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
 	addAndMakeVisible(&gain1);
 
-	gainThru.setRange(0.0, 1.0);
+	gainThru.setRange(0.0, 1.0, 0.001);
 	gainThru.setValue(0.75);
 	gainThru.addListener(this);
+	gainThru.setSliderStyle(Slider::LinearVertical);
+	gainThru.setTextBoxStyle(Slider::TextBoxBelow, false, 80, 20);
 	addAndMakeVisible(&gainThru);
 
 	threshSlider.setSliderStyle(Slider::LinearBarVertical);
-	threshSlider.setRange(-12.0, 0);
+	threshSlider.setRange(-12.0, 0, 0.1);
 	threshSlider.setValue(-6.0);
 	threshSlider.addListener(this);
+	threshSlider.setTextValueSuffix(" dB");
 	addAndMakeVisible(&threshSlider);
 
-	recoverySlider.setSliderStyle(Slider::Rotary);
-	recoverySlider.setRange(.001, .1);
-	recoverySlider.setValue(.05);
-	recoverySlider.addListener(this);
-	addAndMakeVisible(&recoverySlider);
-
-	HPF.setSliderStyle(Slider::Rotary);
-	HPF.setRange(10, 22000);
-	HPF.setValue(10);
-	HPF.addListener(this);
-	addAndMakeVisible(&HPF);
-
-	LPF.setSliderStyle(Slider::Rotary);
-	LPF.setRange(10, 22000);
-	LPF.setValue(22000);
-	LPF.addListener(this);
-	addAndMakeVisible(&LPF);
-
-	zoomSlider.setRange(0.0, 1.0);
+	zoomSlider.setTextBoxStyle(Slider::NoTextBox, true, 0, 0);
+	zoomSlider.setRange(0.001, 1.0);
 	zoomSlider.setValue(1.0);
 	zoomSlider.addListener(this);
 	addAndMakeVisible(&zoomSlider);
@@ -87,27 +92,74 @@ DrumReplacerAudioProcessorEditor::DrumReplacerAudioProcessorEditor(DrumReplacerA
 	offsetSlider.setRange(-50, 50);
 	offsetSlider.setValue(0);
 	offsetSlider.setDoubleClickReturnValue(true, 0);
-
 	offsetSlider.addListener(this);
+	offsetSlider.setTextBoxStyle(Slider::TextBoxBelow, true, 100, 20);
+	offsetSlider.setTextValueSuffix("ms");
+	offsetSlider.setEnabled(false);
 	addAndMakeVisible(&offsetSlider);
 
-	// button
-	filterButton.setToggleState(false, true);
-	addAndMakeVisible(filterButton);
-	filterButton.addListener(this);
+	//Knobs
+	HPF.setSliderStyle(Slider::Rotary);
+	HPF.setRange(10, 22000, 1);
+	HPF.setSkewFactorFromMidPoint(1000);
+	HPF.setValue(10);
+	HPF.addListener(this);
+	HPF.setTextBoxStyle(Slider::TextBoxBelow, false, 100, 20);
+	HPF.setTextValueSuffix("Hz");
+	addAndMakeVisible(&HPF);
 
-	phaseButton.setToggleState(false, true);
-	addAndMakeVisible(phaseButton);
-	phaseButton.addListener(this);
+	LPF.setSliderStyle(Slider::Rotary);
+	LPF.setRange(10, 22000, 1);
+	LPF.setSkewFactorFromMidPoint(1000);
+	LPF.setValue(22000);
+	LPF.addListener(this);
+	LPF.setTextBoxStyle(Slider::TextBoxBelow, false, 100, 20);
+	LPF.setTextValueSuffix("Hz");
+	addAndMakeVisible(&LPF);
 
-	//meters
+	recoverySlider.setSliderStyle(Slider::Rotary);
+	recoverySlider.setRange(.001, 1.0, .001);
+	recoverySlider.setValue(.5);
+	recoverySlider.addListener(this);
+	recoverySlider.setTextBoxStyle(Slider::TextBoxBelow, false, 100, 20);
+	recoverySlider.setTextValueSuffix("ms");
+	addAndMakeVisible(&recoverySlider);
+
+	//Meters
 	meterL.setName("ppmL");
 	addAndMakeVisible(meterL);
 
 	meterR.setName("ppmR");
 	addAndMakeVisible(meterR);
 
+	//Labels
+	retrigLabel.setText("Retrigger", NotificationType::dontSendNotification);
+	retrigLabel.setJustificationType(Justification::centred);
+	addAndMakeVisible(retrigLabel);
 
+	zoomLabel.setText("Zoom", NotificationType::dontSendNotification);
+	zoomLabel.setJustificationType(Justification::centred);
+	addAndMakeVisible(zoomLabel);
+
+	gainlabel1.setText("Gain", NotificationType::dontSendNotification);
+	gainlabel1.setJustificationType(Justification::centred);
+	addAndMakeVisible(gainlabel1);
+
+	gainlabel2.setText("Gain", NotificationType::dontSendNotification);
+	gainlabel2.setJustificationType(Justification::centred);
+	addAndMakeVisible(gainlabel2);
+
+	offsetLabel.setText("Offset", NotificationType::dontSendNotification);
+	offsetLabel.setJustificationType(Justification::centred);
+	addAndMakeVisible(offsetLabel);
+
+	filterLabel1.setText("HP", NotificationType::dontSendNotification);
+	filterLabel1.setJustificationType(Justification::centred);
+	addAndMakeVisible(filterLabel1);
+	
+	filterLabel2.setText("LP", NotificationType::dontSendNotification);
+	filterLabel2.setJustificationType(Justification::centred);
+	addAndMakeVisible(filterLabel2);
 }
 
 DrumReplacerAudioProcessorEditor::~DrumReplacerAudioProcessorEditor()
@@ -120,35 +172,54 @@ void DrumReplacerAudioProcessorEditor::paint (Graphics& g)
 {
     g.fillAll (Colours::white);
 
+	bg = ImageCache::getFromFile(File("C:/Users/Gregory/Desktop/School/PluginDev/DrumReplacer/drbg.jpg"));
+	g.drawImage(bg, 0, 0, getWidth(), getHeight(), 0, 0, bg.getWidth(), bg.getHeight(), false);
 }
 
 void DrumReplacerAudioProcessorEditor::resized()
 {
-	openButton.setBounds(10, 10, 50, 20);
-	playButton.setBounds(10, 40, 50, 20);
+	openButton.setBounds(10, 10, 80, 20);
+	playButton.setBounds(10, 40, 80, 20);
 
-	gain1.setBounds(80, 10, 200, 50);
-	gainThru.setBounds(10, 300, 200, 50);
+	retrigLabel.setBounds(5, 65, 80, 20);
+	recoverySlider.setBounds(10, 85, 80, 50);
 
-	meterL.setBounds(320, 100, 20,180);
-	meterR.setBounds(340, 100, 20, 180);
-	threshSlider.setBounds(300, 100, 20, 180);
+	waveform1.setBounds(100, 10, 300, 125);
 
-	recoverySlider.setBounds(10, 80, 50, 50);
+	triggerWave.setBounds(100, 150, 300, 125);
+
+	threshSlider.setBounds(10, 150, 40, 125);
+	meterL.setBounds(50, 150, 20, 125);
+	meterR.setBounds(70, 150, 20, 125);
+
+	zoomLabel.setBounds(100, 285, 50, 20);
+	zoomSlider.setBounds(150, 285, 250, 20);
+
+	gain1.setBounds(410, 30, 40, 105);
+	gainlabel1.setBounds(410, 10, 40, 20);
+
+	gainThru.setBounds(410, 170, 40, 105);
+	gainlabel2.setBounds(410, 150, 40, 20);
+
+	phaseButton.setBounds(460, 15, 140, 30);
+	offsetSlider.setBounds(460, 60, 140, 50);
+	offsetLabel.setBounds(460, 40, 140, 20);
+
+	filterButton.setBounds(460, 155, 140, 30);
+
+	filterLabel1.setBounds(470, 200, 50, 20);
+	HPF.setBounds(470, 220, 50, 50);
+
+	filterLabel2.setBounds(530, 200, 50, 20);
+	LPF.setBounds(530, 220, 50, 50);
+
+	/*
 
 	HPF.setBounds(10, 150, 50, 50);
 	LPF.setBounds(10, 210, 50, 50);
 
-	waveform1.setBounds(10, 350, 300, 300);
 
-	triggerWave.setBounds(400, 350, 300, 300);
-
-	zoomSlider.setBounds(10, 700, 300, 50);
-
-	filterButton.setBounds(700, 10, 30, 30);
-	phaseButton.setBounds(740, 10, 30, 30);
-
-	offsetSlider.setBounds(400, 100, 300, 50);
+	*/
 }
 
 void DrumReplacerAudioProcessorEditor::buttonClicked(Button * button)
@@ -259,7 +330,14 @@ void DrumReplacerAudioProcessorEditor::openButtonClicked()
 
 			offsetSlider.setValue(0);
 			phaseButton.setToggleState(false, true);
+			phaseButton.setEnabled(true);
+			offsetSlider.setEnabled(true);
+
+			AudioSampleBuffer * waveBuff = processor.getTriggerBuffer();
+			triggerWave.clearWaveformBuffer();
+			triggerWave.updateBuffer(*waveBuff, waveLen);
 		}
+		reader->~AudioFormatReader();
 	}
 }
 
@@ -280,7 +358,6 @@ void DrumReplacerAudioProcessorEditor::timerCallback() {
 void DrumReplacerAudioProcessorEditor::changeListenerCallback(ChangeBroadcaster *source) {
 	AudioSampleBuffer * waveBuff = processor.getTriggerBuffer();
 	triggerWave.clearWaveformBuffer();
-
 	triggerWave.updateBuffer(*waveBuff, waveLen);
 }
 
