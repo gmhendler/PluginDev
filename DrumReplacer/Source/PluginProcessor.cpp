@@ -260,7 +260,8 @@ void DrumReplacerAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuf
 		}
 	}
 	trigSamp = 0;
-
+	
+	buffer.applyGain(thruGain);
 
 	//play sample
 	synth.renderNextBlock(buffer, midiMessages, 0, numSamples);
@@ -282,7 +283,7 @@ void DrumReplacerAudioProcessor::processBlock(AudioSampleBuffer& buffer, MidiBuf
 				samp = buffer.getSample(channel, i);
 			}
 
-			buffer.setSample(channel, i, samp * thruGain);
+			buffer.setSample(channel, i, samp);
 		}
     }
 
