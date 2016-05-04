@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="zkSdfC" name="DrumReplacer" projectType="audioplug" version="1.0.0"
+              bundleIdentifier="com.yourcompany.DrumReplacer" includeBinaryInAppConfig="1"
+              buildVST="1" buildVST3="0" buildAU="1" buildAUv3="0" buildRTAS="0"
+              buildAAX="0" pluginName="DrumReplacer" pluginDesc="DrumReplacer"
+              pluginManufacturer="yourcompany" pluginManufacturerCode="Manu"
+              pluginCode="Zksd" pluginChannelConfigs="" pluginIsSynth="0" pluginWantsMidiIn="0"
+              pluginProducesMidiOut="0" pluginIsMidiEffectPlugin="0" pluginEditorRequiresKeys="0"
+              pluginAUExportPrefix="DrumReplacerAU" pluginRTASCategory="" aaxIdentifier="com.yourcompany.DrumReplacer"
+              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.2.1">
+  <MAINGROUP id="wgNe3t" name="DrumReplacer">
+    <GROUP id="{A6D9C745-C425-093F-A588-F6A269172B9D}" name="Source">
+      <FILE id="EQzmz7" name="Bessel.cpp" compile="1" resource="0" file="Source/Bessel.cpp"/>
+      <FILE id="uzlwoL" name="Biquad.cpp" compile="1" resource="0" file="Source/Biquad.cpp"/>
+      <FILE id="a8gPKT" name="Butterworth.cpp" compile="1" resource="0" file="Source/Butterworth.cpp"/>
+      <FILE id="BSES13" name="Cascade.cpp" compile="1" resource="0" file="Source/Cascade.cpp"/>
+      <FILE id="HgAJpl" name="ChebyshevI.cpp" compile="1" resource="0" file="Source/ChebyshevI.cpp"/>
+      <FILE id="rRsQdf" name="ChebyshevII.cpp" compile="1" resource="0" file="Source/ChebyshevII.cpp"/>
+      <FILE id="KcsIO1" name="Custom.cpp" compile="1" resource="0" file="Source/Custom.cpp"/>
+      <FILE id="o7Mqu7" name="Design.cpp" compile="1" resource="0" file="Source/Design.cpp"/>
+      <FILE id="G4rihi" name="Documentation.cpp" compile="1" resource="0"
+            file="Source/Documentation.cpp"/>
+      <GROUP id="{FB884DA9-1814-3B16-D5BA-DE2ADA7D3E09}" name="DspFilters">
+        <FILE id="PPM4Ew" name="Bessel.h" compile="0" resource="0" file="Source/DspFilters/Bessel.h"/>
+        <FILE id="nfwIi3" name="Biquad.h" compile="0" resource="0" file="Source/DspFilters/Biquad.h"/>
+        <FILE id="JNBG33" name="Butterworth.h" compile="0" resource="0" file="Source/DspFilters/Butterworth.h"/>
+        <FILE id="arC0eO" name="Cascade.h" compile="0" resource="0" file="Source/DspFilters/Cascade.h"/>
+        <FILE id="tMN6Rt" name="ChebyshevI.h" compile="0" resource="0" file="Source/DspFilters/ChebyshevI.h"/>
+        <FILE id="JBW71e" name="ChebyshevII.h" compile="0" resource="0" file="Source/DspFilters/ChebyshevII.h"/>
+        <FILE id="fMW6PR" name="Common.h" compile="0" resource="0" file="Source/DspFilters/Common.h"/>
+        <FILE id="ys7J7p" name="Custom.h" compile="0" resource="0" file="Source/DspFilters/Custom.h"/>
+        <FILE id="k3yHYz" name="Design.h" compile="0" resource="0" file="Source/DspFilters/Design.h"/>
+        <FILE id="hanZVY" name="Dsp.h" compile="0" resource="0" file="Source/DspFilters/Dsp.h"/>
+        <FILE id="pzd2D5" name="Elliptic.h" compile="0" resource="0" file="Source/DspFilters/Elliptic.h"/>
+        <FILE id="U55tH6" name="Filter.h" compile="0" resource="0" file="Source/DspFilters/Filter.h"/>
+        <FILE id="I6UwqH" name="Layout.h" compile="0" resource="0" file="Source/DspFilters/Layout.h"/>
+        <FILE id="CPQ5Ev" name="Legendre.h" compile="0" resource="0" file="Source/DspFilters/Legendre.h"/>
+        <FILE id="b1XMtA" name="MathSupplement.h" compile="0" resource="0"
+              file="Source/DspFilters/MathSupplement.h"/>
+        <FILE id="o9k0Cw" name="Params.h" compile="0" resource="0" file="Source/DspFilters/Params.h"/>
+        <FILE id="TfPp9E" name="PoleFilter.h" compile="0" resource="0" file="Source/DspFilters/PoleFilter.h"/>
+        <FILE id="GHLr5x" name="RBJ.h" compile="0" resource="0" file="Source/DspFilters/RBJ.h"/>
+        <FILE id="X9uNw7" name="RootFinder.h" compile="0" resource="0" file="Source/DspFilters/RootFinder.h"/>
+        <FILE id="Ih0khK" name="SmoothedFilter.h" compile="0" resource="0"
+              file="Source/DspFilters/SmoothedFilter.h"/>
+        <FILE id="Omx2sc" name="State.h" compile="0" resource="0" file="Source/DspFilters/State.h"/>
+        <FILE id="xvwDtG" name="Types.h" compile="0" resource="0" file="Source/DspFilters/Types.h"/>
+        <FILE id="spTu3i" name="Utilities.h" compile="0" resource="0" file="Source/DspFilters/Utilities.h"/>
+      </GROUP>
+      <FILE id="NK56BZ" name="Elliptic.cpp" compile="1" resource="0" file="Source/Elliptic.cpp"/>
+      <FILE id="SMKFYP" name="ErrorDef.h" compile="0" resource="0" file="Source/ErrorDef.h"/>
+      <FILE id="WxrY32" name="Filter.cpp" compile="1" resource="0" file="Source/Filter.cpp"/>
+      <FILE id="jJ5LiK" name="Legendre.cpp" compile="1" resource="0" file="Source/Legendre.cpp"/>
+      <FILE id="w6VWX7" name="MeterComponent.cpp" compile="1" resource="0"
+            file="Source/MeterComponent.cpp"/>
+      <FILE id="mbsQ9W" name="MeterComponent.h" compile="0" resource="0"
+            file="Source/MeterComponent.h"/>
+      <FILE id="mIs3EA" name="OnsetTrigger.cpp" compile="1" resource="0"
+            file="Source/OnsetTrigger.cpp"/>
+      <FILE id="DmP9Pp" name="OnsetTrigger.h" compile="0" resource="0" file="Source/OnsetTrigger.h"/>
+      <FILE id="RY1fTB" name="Param.cpp" compile="1" resource="0" file="Source/Param.cpp"/>
+      <FILE id="f4Tjme" name="PoleFilter.cpp" compile="1" resource="0" file="Source/PoleFilter.cpp"/>
+      <FILE id="Je9k3G" name="PPM.cpp" compile="1" resource="0" file="Source/PPM.cpp"/>
+      <FILE id="pDxf7C" name="PPM.h" compile="0" resource="0" file="Source/PPM.h"/>
+      <FILE id="eSBmZi" name="RBJ.cpp" compile="1" resource="0" file="Source/RBJ.cpp"/>
+      <FILE id="A9GgTj" name="RootFinder.cpp" compile="1" resource="0" file="Source/RootFinder.cpp"/>
+      <FILE id="CGcPb3" name="State.cpp" compile="1" resource="0" file="Source/State.cpp"/>
+      <FILE id="HyrU8N" name="Util.h" compile="0" resource="0" file="Source/Util.h"/>
+      <FILE id="ITy0Nm" name="Vector.h" compile="0" resource="0" file="Source/Vector.h"/>
+      <FILE id="zuJRvl" name="WaveformComponent.h" compile="0" resource="0"
+            file="Source/WaveformComponent.h"/>
+      <FILE id="Zr913P" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="IYRgeE" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="rCMoAq" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="CzsIDa" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="DrumReplacer"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="DrumReplacer"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../Documents/THEFINAL/JUCE-master/modules"/>
+        <MODULEPATH id="juce_events" path="../Documents/THEFINAL/JUCE-master/modules"/>
+        <MODULEPATH id="juce_graphics" path="../Documents/THEFINAL/JUCE-master/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../Documents/THEFINAL/JUCE-master/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../Documents/THEFINAL/JUCE-master/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../Documents/THEFINAL/JUCE-master/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../Documents/THEFINAL/JUCE-master/modules"/>
+        <MODULEPATH id="juce_video" path="../Documents/THEFINAL/JUCE-master/modules"/>
+        <MODULEPATH id="juce_opengl" path="../Documents/THEFINAL/JUCE-master/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../Documents/THEFINAL/JUCE-master/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../Documents/THEFINAL/JUCE-master/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../Documents/THEFINAL/JUCE-master/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../Documents/THEFINAL/JUCE-master/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../Documents/THEFINAL/JUCE-master/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_video" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+</JUCERPROJECT>

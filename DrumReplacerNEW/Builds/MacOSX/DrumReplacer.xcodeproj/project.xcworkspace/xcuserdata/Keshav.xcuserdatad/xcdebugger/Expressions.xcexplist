@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "GLOBAL">
+         <PersistentStrings>
+            <PersistentString
+               value = "m_fThreshold">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "COnsetTrigger::process(float**, float**, int):OnsetTrigger.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "JuceVSTWrapper::JuceVSTWrapper(long long (*)(AEffect*, int, int, long long, void*, float), juce::AudioProcessor*):juce_VST_Wrapper.cpp">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
